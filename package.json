@@ -4,7 +4,12 @@
   "description": "'DevC capstone project'",
   "main": "server.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "jasmine",
+    "build": "babel src -d lib",
+    "start": "nodemon --exec babel-node server.js",
+    "createusersdb": "babel-node ./services/db.js createUsersTable",
+    "createcommentsdb": "babel-node ./services/db.js createCommentsTable",
+    "creategifsdb": "babel-node ./services/db.js createGifsTable"
   },
   "repository": {
     "type": "git",
@@ -17,17 +22,37 @@
   },
   "homepage": "https://github.com/FAenX/DevC_capstone_project#readme",
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "nodemon": "^1.19.4"
+    "jsonwebtoken": "^8.5.1",
+    "make-runnable": "^1.3.6",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.4",
+    "pg": "^7.12.1",
+    "update": "^0.7.4"
   },
   "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-stage-2": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.9.0",
+    "babel-preset-env": "^1.7.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "jasmine": "^3.5.0"
+    "install": "^0.13.0",
+    "jasmine": "^3.5.0",
+    "npm": "^6.12.1",
+    "react": "^16.11.0",
+    "regenerator-runtime": "^0.13.3"
   }
 }
