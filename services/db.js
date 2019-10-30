@@ -58,8 +58,9 @@ const createCommentsTable =()=>{
       comments(
         id SERIAL PRIMARY KEY,
         comment VARCHAR(128) NOT NULL,
-        FOREIGN KEY (user) REFERENCES users (id),
-        FOREIGN KEY (gif) REFERENCES gifs (id)
+        FOREIGN KEY (user) REFERENCES users (id) NOT NULL,
+        FOREIGN KEY (gif) REFERENCES gifs (id) NULL,
+        FOREIGN KEY (article) REFERENCES articles (id)  NULL,     
 
       )`;
 
@@ -93,6 +94,27 @@ const createGifsTable =()=>{
       console.log(err);
       pool.end();
     });
+};
+
+const createArticlesTable =()=>{
+  const articles = `CREATE TABLE IF NOT EXISTS
+    articles(
+      id SERIAL PRIMARY KEY,
+      article VARCHAR(128) NOT NULL,
+      FOREIGN KEY (user) REFERENCES users (id),
+
+
+    )`;       
+
+return pool.query(gifs)
+  .then((res) => {
+    console.log(res);
+    pool.end();
+  })
+  .catch((err) => {
+    console.log(err);
+    pool.end();
+  });
 };
 
 
