@@ -1,37 +1,22 @@
-/* const { Client } = require('pg')
-
-const client = new Client({
-    user: 'postgres',
-    host: 'devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com',
-    database: 'DevC_capstone_project',
-    password: '6LppV5MJQ0sXh5M1mt2R',
-    port: 5432,
-  })
-  
-client.connect();
-  
-  
-module.exports = client;   */
-
 import pg from "pg";
 
 const config = {
-  host: 'devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com',
-  user: 'postgres',
-  database: 'DevC_capstone_project',
-  password: '6LppV5MJQ0sXh5M1mt2R',
+  host: "devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com",
+  user: "postgres",
+  database: "DevC_capstone_project",
+  password: "6LppV5MJQ0sXh5M1mt2R",
   port: 5432,
-  max: 10, 
+  max: 10,
   idleTimeoutMillis: 30000,
 };
 
 const pool = new pg.Pool(config);
 
-pool.on('connect', () => {
-  console.log('connected to the Database');
+pool.on("connect", () => {
+  console.log("connected to the Database");
 });
 
-const createUsersTable =  () => {
+exports.createUsersTable = () => {
   const users = `CREATE TABLE IF NOT EXISTS
       users(
         id SERIAL PRIMARY KEY,
@@ -42,7 +27,7 @@ const createUsersTable =  () => {
         password VARCHAR(128) NOT NULL
       )`;
 
-      return pool.query(users)
+  return pool.query(users)
     .then((res) => {
       console.log(res);
       pool.end();
@@ -51,10 +36,10 @@ const createUsersTable =  () => {
       console.log(err);
       pool.end();
     });
-}
+};
 
-const createCommentsTable =()=>{
-    const comments = `CREATE TABLE IF NOT EXISTS
+exports.createCommentsTable = () => {
+  const comments = `CREATE TABLE IF NOT EXISTS
       comments(
         id SERIAL PRIMARY KEY,
         comment VARCHAR(128) NOT NULL,
@@ -64,7 +49,7 @@ const createCommentsTable =()=>{
 
       )`;
 
-    return pool.query(comments)
+  return pool.query(comments)
     .then((res) => {
       console.log(res);
       pool.end();
@@ -73,17 +58,16 @@ const createCommentsTable =()=>{
       console.log(err);
       pool.end();
     });
+};
 
-}
-
-const createGifsTable =()=>{
-    const gifs = `CREATE TABLE IF NOT EXISTS
+exports.createGifsTable = () => {
+  const gifs = `CREATE TABLE IF NOT EXISTS
       gifs(
         id SERIAL PRIMARY KEY,
         address VARCHAR(128) NOT NULL,
         FOREIGN KEY (user) REFERENCES users (id)
 
-      )`;       
+      )`;
 
   return pool.query(gifs)
     .then((res) => {
@@ -96,7 +80,7 @@ const createGifsTable =()=>{
     });
 };
 
-const createArticlesTable =()=>{
+exports.createArticlesTable = () => {
   const articles = `CREATE TABLE IF NOT EXISTS
     articles(
       id SERIAL PRIMARY KEY,
@@ -104,34 +88,26 @@ const createArticlesTable =()=>{
       FOREIGN KEY (user) REFERENCES users (id),
 
 
-    )`;       
+    )`;
 
-return pool.query(gifs)
-  .then((res) => {
-    console.log(res);
-    pool.end();
-  })
-  .catch((err) => {
-    console.log(err);
-    pool.end();
-  });
+  return pool.query(articles)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
 };
 
 
-
-pool.on('remove', () => {
-  console.log('client removed');
+pool.on("remove", () => {
+  console.log("client removed");
   process.exit(0);
 });
 
 
-//export pool and createTables to be accessible  from an where within the application
-module.exports = {
-  createUsersTable,
-  createCommentsTable,
-  createGifsTable,
-  pool,
-};
+// export pool and createTables to be accessible  from an where within the application
 
-require('make-runnable');
-
+require("make-runnable");

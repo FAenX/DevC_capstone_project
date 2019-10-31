@@ -1,26 +1,37 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+/* eslint-disable no-console */
+/* eslint-disable radix */
+import pg from "pg";
+
+const config = {
+  host: "devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com",
+  user: "postgres",
+  database: "DevC_capstone_project",
+  password: "6LppV5MJQ0sXh5M1mt2R",
+  port: 5432,
+  max: 10,
+  idleTimeoutMillis: 30000,
+};
+
+const pool = new pg.Pool(config);
 
 
-import { pool } from '../services/db';
-
-
-exports.viewAllUsers = (request, response, next) => {
+exports.viewAllUsers = (request, response) => {
   pool.connect((err, client, done) => {
-    const query = 'SELECT * FROM users';
+    const query = "SELECT * FROM users";
     client.query(query, (error, result) => {
       done();
       if (error) {
         response.status(400).json({ error });
-      } else if (result.rows < '1') {
-        response.status(404).send({
-          status: 'Failed',
-          message: 'No user information found',
+      } else if (result.rows < "1") {
+        response.status(200).send({
+          status: "Successful",
+          message: "Users Information retrieved",
+          students: [],
         });
       } else {
         response.status(200).send({
-          status: 'Successful',
-          message: 'Users Information retrieved',
+          status: "Successful",
+          message: "Users Information retrieved",
           students: result.rows,
         });
       }
@@ -41,16 +52,16 @@ exports.createUser = (request, response) => {
   console.log(data);
 
   pool.connect((error, client, done) => {
-    const query = 'INSERT INTO users(first_name, last_name, username, email, password) VALUES($1,$2,$3,$4,$5) RETURNING *';
+    const query = "INSERT INTO users(first_name, last_name, username, email, password) VALUES($1,$2,$3,$4,$5) RETURNING *";
     const values = [data.firstName, data.lastName, data.userName, data.email, data.password];
 
-    client.query(query, values, (error, result) => {
+    client.query(query, values, (err, result) => {
       done();
-      if (error) {
-        response.status(400).json({ error });
+      if (err) {
+        response.status(400).json({ err });
       } else {
         response.status(202).send({
-          status: 'SUccessful',
+          status: "Successful",
           result: result.rows[0],
 
         });
@@ -59,10 +70,10 @@ exports.createUser = (request, response) => {
   });
 };
 
-exports.getUserById = (request, response, next) => {
+exports.getUserById = (request, response) => {
   const id = parseInt(request.params.id);
 
-  pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
+  pool.query("SELECT * FROM users WHERE id = $1", [id], (error, results) => {
     if (error) {
       throw (error);
     }
@@ -70,18 +81,20 @@ exports.getUserById = (request, response, next) => {
   });
 };
 
-exports.modifyUser = (request, response, next) => {
+exports.modifyUser = (request, response) => {
   const id = parseInt(request.params.id);
   const { username, email } = request.body;
 
   pool.query(
-    'UPDATE users SET username = $1, email = $2 WHERE id = $3',
+    "UPDATE users SET username = $1, email = $2 WHERE id = $3",
     [username, email, id],
-    (error, results) => {
+    (error) => {
       if (error) {
         throw error;
       }
-      response.status(200).send(`User modified with ID: ${id}`);
+      response.status(200).send({
+        status: `User modified with ID: ${id}`,
+      });
     },
   );
 };
@@ -89,10 +102,12 @@ exports.modifyUser = (request, response, next) => {
 exports.deleteUser = (request, response) => {
   const id = parseInt(request.params.id);
 
-  pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
+  pool.query("DELETE FROM users WHERE id = $1", [id], (error) => {
     if (error) {
-      throw error
+      throw error;
     }
-    response.status(200).send(`User deleted with ID: ${id}`)
-  })
-}
+    response.status(200).send({
+      status: `User deleted with ID: ${id}`,
+    });
+  });
+};

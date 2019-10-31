@@ -4,7 +4,9 @@ aws_keys/
 .eslintrc.json
 linter.sh
 spec/
+.eslintignore
 
+lib/
 
 logs
 *.log
