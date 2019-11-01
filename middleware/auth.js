@@ -18,3 +18,13 @@ module.exports = (req, res, next) => {
     });
   }
 };
+
+exports.isAdmin = (req, res, next) => {
+  try {
+    // const
+  } catch (error) {
+    res.status(401).json({
+      error: new Error("Invalid request"),
+    });
+  }
+};
