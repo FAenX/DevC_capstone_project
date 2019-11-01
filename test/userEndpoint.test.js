@@ -24,26 +24,39 @@ const makeEmail = () => {
   return strEmail;
 };
 
-const randomEmail = makeEmail();
+const randomAdminEmail = makeEmail();
+const randomUserEmail = makeEmail();
 
 
-const user = {
+const adminUser = {
   first_name: "firstName",
   last_name: "lastName",
   username: "userName",
-  email: randomEmail,
+  email: randomAdminEmail,
   password: "password",
+  is_staff: true,
 };
 
+const normalUser = {
+  first_name: "firstName",
+  last_name: "lastName",
+  username: "userName",
+  email: randomUserEmail,
+  password: "password",
+  is_staff: false,
+};
+
+
 let createdUserId = null;
+let createdAdminId = null;
 let token = null;
 
 describe("Users end point", () => {
-  it("creates a user", (done) => {
+  it("creates a user if admin", (done) => {
     chai
       .request(app)
       .post("/api/v1/users")
-      .send(user)
+      .send(adminUser)
       .end((err, res) => {
         if (err) {
           done(err);
@@ -51,6 +64,27 @@ describe("Users end point", () => {
         expect(res).to.have.status(202);
         expect(res.body.status).to.equals("Successful");
         expect(res.body.result.first_name).to.equals("firstName");
+        expect(res.body.result.is_staff).to.be.true;
+        createdAdminId = res.body.result.id;
+        done();
+      });
+  });
+
+  it("fails to create a user if not admin user", (done) => {
+    chai
+      .request(app)
+      .post("/api/v1/users")
+      .send(normalUser)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+
+        console.log("hey this is me ", res.body);
+        // expect(res).to.have.status(202);
+        expect(res.body.status).to.equals("Successful");
+        expect(res.body.result.first_name).to.equals("firstName");
+        // expect(res.body.result.is_staff).to.be.false;
         createdUserId = res.body.result.id;
         done();
       });

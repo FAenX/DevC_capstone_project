@@ -59,7 +59,10 @@ exports.createUser = (request, response) => {
     userName: request.body.username,
     email: request.body.email,
     password: request.body.password,
+    is_staff: request.body.is_staff,
   };
+
+  console.log(data);
 
   let hashed;
   bcrypt.hash(request.body.password, 10).then(
@@ -76,8 +79,8 @@ exports.createUser = (request, response) => {
 
 
   pool.connect((error, client, done) => {
-    const query = "INSERT INTO users(first_name, last_name, username, email, password) VALUES($1,$2,$3,$4,$5) RETURNING *";
-    const values = [data.firstName, data.lastName, data.userName, data.email, hashed];
+    const query = "INSERT INTO users(first_name, last_name, username, email, password, is_staff) VALUES($1,$2,$3,$4,$5,$6) RETURNING *";
+    const values = [data.firstName, data.lastName, data.userName, data.email, hashed, data.is_staff];
 
     client.query(query, values, (err, result) => {
       done();
