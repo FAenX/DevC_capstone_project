@@ -48,29 +48,11 @@ const normalUser = {
 
 
 let createdUserId = null;
-let createdAdminId = null;
+const createdAdminId = null;
 let token = null;
 
 describe("Users end point", () => {
-  it("creates a user if admin", (done) => {
-    chai
-      .request(app)
-      .post("/api/v1/users")
-      .send(adminUser)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        expect(res).to.have.status(202);
-        expect(res.body.status).to.equals("Successful");
-        expect(res.body.result.first_name).to.equals("firstName");
-        expect(res.body.result.is_staff).to.be.true;
-        createdAdminId = res.body.result.id;
-        done();
-      });
-  });
-
-  it("fails to create a user if not admin user", (done) => {
+  it("creates a normal user", (done) => {
     chai
       .request(app)
       .post("/api/v1/users")
@@ -79,31 +61,29 @@ describe("Users end point", () => {
         if (err) {
           done(err);
         }
-
-        console.log("hey this is me ", res.body);
-        // expect(res).to.have.status(202);
+        expect(res).to.have.status(202);
         expect(res.body.status).to.equals("Successful");
         expect(res.body.result.first_name).to.equals("firstName");
-        // expect(res.body.result.is_staff).to.be.false;
         createdUserId = res.body.result.id;
         done();
       });
   });
+
 
   it("logs in a user", (done) => {
     chai
       .request(app)
       .post("/api/v1/users/login")
       .send({
-        email: user.email,
-        password: user.password,
+        email: normalUser.email,
+        password: normalUser.password,
       })
       .end((err, res) => {
         if (err) {
           done(err);
         }
         expect(res).to.have.status(200);
-        expect(res.body.userId).to.equals(user.email);
+        expect(res.body.userId).to.equals(normalUser.email);
         expect(res.body.token).is.a("string");
         token = res.body.token;
         done();

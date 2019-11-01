@@ -20,12 +20,14 @@ const pool = new pg.Pool(config);
 exports.login = (request, response, next) => {
   const userEmail = request.body.email;
   const userPassword = request.body.password;
+  const isStaff = request.body.is_staff;
 
   pool.query("SELECT * FROM users WHERE email = $1", [userEmail], (error, results) => {
     if (error) {
       throw (error);
     }
-    const { email, password } = results.rows[0];
+    const { email, password, is_staff } = results.rows[0];
+    console.log(is_staff);
 
     bcrypt.compare(userPassword, password).then(
       (valid) => {
@@ -62,7 +64,6 @@ exports.createUser = (request, response) => {
     is_staff: request.body.is_staff,
   };
 
-  console.log(data);
 
   let hashed;
   bcrypt.hash(request.body.password, 10).then(
@@ -80,7 +81,14 @@ exports.createUser = (request, response) => {
 
   pool.connect((error, client, done) => {
     const query = "INSERT INTO users(first_name, last_name, username, email, password, is_staff) VALUES($1,$2,$3,$4,$5,$6) RETURNING *";
-    const values = [data.firstName, data.lastName, data.userName, data.email, hashed, data.is_staff];
+    const values = [
+      data.firstName,
+      data.lastName,
+      data.userName,
+      data.email,
+      hashed,
+      data.is_staff,
+    ];
 
     client.query(query, values, (err, result) => {
       done();
