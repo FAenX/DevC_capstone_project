@@ -23,7 +23,7 @@ exports.createUsersTable = () => {
         first_name VARCHAR(128) NOT NULL,
         last_name VARCHAR(128) NOT NULL,
         username VARCHAR(128) NOT NULL,
-        email VARCHAR(128) NOT NULL,
+        email VARCHAR(128) NOT NULL UNIQUE,
         password VARCHAR(128) NOT NULL
       )`;
 

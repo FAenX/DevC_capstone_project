@@ -8,11 +8,12 @@ const router = express.Router();
 
 // router.post('/signup', userControllers.signup);
 
-router.get("/", userControllers.viewAllUsers);
+router.post("/login", userControllers.login);
 router.post("/", userControllers.createUser);
-router.get("/:id", userControllers.getUserById);
-router.patch("/:id", userControllers.modifyUser);
-router.delete("/:id", userControllers.deleteUser);
+router.get("/", auth, userControllers.viewAllUsers);
+router.get("/:id", auth, userControllers.getUserById);
+router.patch("/:id", auth, userControllers.modifyUser);
+router.delete("/:id", auth, userControllers.deleteUser);
 
 
 export default router;

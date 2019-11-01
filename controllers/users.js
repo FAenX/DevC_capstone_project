@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
 /* eslint-disable radix */
 import pg from "pg";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
 
 const config = {
   host: "devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com",
@@ -14,6 +17,83 @@ const config = {
 
 const pool = new pg.Pool(config);
 
+exports.login = (request, response, next) => {
+  const userEmail = request.body.email;
+  const userPassword = request.body.password;
+
+  pool.query("SELECT * FROM users WHERE email = $1", [userEmail], (error, results) => {
+    if (error) {
+      throw (error);
+    }
+    const { email, password } = results.rows[0];
+
+    bcrypt.compare(userPassword, password).then(
+      (valid) => {
+        if (!valid) {
+          return response.status(401).json({
+            message: "Incorrect password",
+          });
+        }
+        const token = jwt.sign(
+          { userId: email },
+          "RANDOM_TOKEN_SECRET",
+          { expiresIn: "24h" },
+        );
+        response.status(200).json({
+          userId: email,
+          token,
+        });
+      },
+    ).catch(
+      (err) => response.status(500).json({
+        err,
+      }),
+    );
+  });
+};
+
+exports.createUser = (request, response) => {
+  const data = {
+    firstName: request.body.first_name,
+    lastName: request.body.last_name,
+    userName: request.body.username,
+    email: request.body.email,
+    password: request.body.password,
+  };
+
+  let hashed;
+  bcrypt.hash(request.body.password, 10).then(
+    (hash) => {
+      hashed = hash;
+    },
+  ).catch(
+    (error) => {
+      response.status(500).json({
+        error,
+      });
+    },
+  );
+
+
+  pool.connect((error, client, done) => {
+    const query = "INSERT INTO users(first_name, last_name, username, email, password) VALUES($1,$2,$3,$4,$5) RETURNING *";
+    const values = [data.firstName, data.lastName, data.userName, data.email, hashed];
+
+    client.query(query, values, (err, result) => {
+      done();
+      if (err) {
+        response.status(400).json({ err });
+        console.log(err);
+      } else {
+        response.status(202).send({
+          status: "Successful",
+          result: result.rows[0],
+
+        });
+      }
+    });
+  });
+};
 
 exports.viewAllUsers = (request, response) => {
   pool.connect((err, client, done) => {
@@ -33,37 +113,6 @@ exports.viewAllUsers = (request, response) => {
           status: "Successful",
           message: "Users Information retrieved",
           students: result.rows,
-        });
-      }
-    });
-  });
-};
-
-
-exports.createUser = (request, response) => {
-  const data = {
-    firstName: request.body.first_name,
-    lastName: request.body.last_name,
-    userName: request.body.username,
-    email: request.body.email,
-    password: request.body.password,
-  };
-  console.log(request.body.email);
-  console.log(data);
-
-  pool.connect((error, client, done) => {
-    const query = "INSERT INTO users(first_name, last_name, username, email, password) VALUES($1,$2,$3,$4,$5) RETURNING *";
-    const values = [data.firstName, data.lastName, data.userName, data.email, data.password];
-
-    client.query(query, values, (err, result) => {
-      done();
-      if (err) {
-        response.status(400).json({ err });
-      } else {
-        response.status(202).send({
-          status: "Successful",
-          result: result.rows[0],
-
         });
       }
     });
