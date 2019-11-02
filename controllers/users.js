@@ -17,10 +17,10 @@ const config = {
 
 const pool = new pg.Pool(config);
 
-exports.login = (request, response, next) => {
+exports.token = (request, response, next) => {
   const userEmail = request.body.email;
   const userPassword = request.body.password;
-  const isStaff = request.body.is_staff;
+  const { isStaff } = request.body.isStaff;
 
   pool.query("SELECT * FROM users WHERE email = $1", [userEmail], (error, results) => {
     if (error) {
@@ -28,6 +28,7 @@ exports.login = (request, response, next) => {
     }
     const { email, password, is_staff } = results.rows[0];
     console.log(is_staff);
+    console.log(password);
 
     bcrypt.compare(userPassword, password).then(
       (valid) => {
@@ -56,12 +57,12 @@ exports.login = (request, response, next) => {
 
 exports.createUser = (request, response) => {
   const data = {
-    firstName: request.body.first_name,
-    lastName: request.body.last_name,
-    userName: request.body.username,
+    firstName: request.body.firstName,
+    lastName: request.body.lastName,
+    userName: request.body.userName,
     email: request.body.email,
     password: request.body.password,
-    is_staff: request.body.is_staff,
+    isStaff: request.body.isStaff,
   };
 
 

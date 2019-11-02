@@ -29,21 +29,21 @@ const randomUserEmail = makeEmail();
 
 
 const adminUser = {
-  first_name: "firstName",
-  last_name: "lastName",
-  username: "userName",
+  firsName: "firstName",
+  lastName: "lastName",
+  userName: "userName",
   email: randomAdminEmail,
   password: "password",
-  is_staff: true,
+  isStaff: true,
 };
 
 const normalUser = {
-  first_name: "firstName",
-  last_name: "lastName",
-  username: "userName",
+  firstName: "firstName",
+  lastName: "lastName",
+  userName: "userName",
   email: randomUserEmail,
   password: "password",
-  is_staff: false,
+  isStaff: false,
 };
 
 
@@ -70,13 +70,14 @@ describe("Users end point", () => {
   });
 
 
-  it("logs in a user", (done) => {
+  it("gets a user token", (done) => {
     chai
       .request(app)
-      .post("/api/v1/users/login")
+      .post("/api/v1/users/token")
       .send({
         email: normalUser.email,
         password: normalUser.password,
+        isStaff: normalUser.isStaff,
       })
       .end((err, res) => {
         if (err) {
