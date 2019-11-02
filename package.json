@@ -10,7 +10,7 @@
     "createusersdb": "babel-node ./services/db.js createUsersTable",
     "createcommentsdb": "babel-node ./services/db.js createCommentsTable",
     "creategifsdb": "babel-node ./services/db.js createGifsTable",
-    "debug": "node --inspect-brk ./dist/server.js"
+    "debug": "nodemon --exec babel-node --inspect  ./dist/server.js"
   },
   "repository": {
     "type": "git",

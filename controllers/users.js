@@ -17,22 +17,26 @@ const config = {
 
 const pool = new pg.Pool(config);
 
-exports.login = (request, response, next) => {
+// user request token
+exports.token = (request, response) => {
   const userEmail = request.body.email;
   const userPassword = request.body.password;
   const isStaff = request.body.is_staff;
 
+  // check if user is a registered user
   pool.query("SELECT * FROM users WHERE email = $1", [userEmail], (error, results) => {
     if (error) {
       throw (error);
     }
     const { email, password, is_staff } = results.rows[0];
 
+    // compared saved hashed password to supplied password
     bcrypt.compare(userPassword, password).then(
       (valid) => {
         if (!valid) {
-          return response.status(401).json({
-            message: "Incorrect password",
+          response.status(401).send({
+            status: "error",
+            error: "Incorrect password",
           });
         }
         const token = jwt.sign(
@@ -40,38 +44,56 @@ exports.login = (request, response, next) => {
           "RANDOM_TOKEN_SECRET",
           { expiresIn: "24h" },
         );
-        response.status(200).json({
-          userId: email,
-          token,
+
+        // respond with jwt token
+        response.status(200).send({
+          status: "success",
+          data: {
+            userId: email,
+            token,
+          },
         });
       },
     ).catch(
-      (err) => response.status(500).json({
+      (err) => response.status(500).send({
+        status: "error",
         err,
       }),
     );
   });
 };
 
+// create user
 exports.createUser = (request, response) => {
   const data = {
-    firstName: request.body.first_name,
-    lastName: request.body.last_name,
-    userName: request.body.username,
+    firstName: request.body.firstName,
+    lastName: request.body.lastName,
+    userName: request.body.userName,
     email: request.body.email,
     password: request.body.password,
+<<<<<<< HEAD
     is_staff: request.body.is_staff,
   };
 
 
   let hashed;
+=======
+    isStaff: request.body.isStaff,
+  };
+
+  let hashedPassword;
+
+  // hash password before saving
+>>>>>>> admin_can_create_employee_account
   bcrypt.hash(request.body.password, 10).then(
     (hash) => {
-      hashed = hash;
+      hashedPassword = hash;
     },
+
   ).catch(
     (error) => {
-      response.status(500).json({
+      response.status(500).send({
+        status: "error",
         error,
       });
     },
@@ -85,19 +107,20 @@ exports.createUser = (request, response) => {
       data.lastName,
       data.userName,
       data.email,
-      hashed,
-      data.is_staff,
+      hashedPassword,
+      data.isStaff,
     ];
-
     client.query(query, values, (err, result) => {
       done();
       if (err) {
-        response.status(400).json({ err });
-        console.log(err);
+        response.status(400).send({
+          status: "error",
+          err,
+        });
       } else {
         response.status(202).send({
-          status: "Successful",
-          result: result.rows[0],
+          status: "success",
+          data: result.rows[0],
 
         });
       }
@@ -111,18 +134,19 @@ exports.viewAllUsers = (request, response) => {
     client.query(query, (error, result) => {
       done();
       if (error) {
-        response.status(400).json({ error });
+        response.status(400).send({
+          status: "error",
+          error,
+        });
       } else if (result.rows < "1") {
         response.status(200).send({
-          status: "Successful",
-          message: "Users Information retrieved",
-          students: [],
+          status: "success",
+          data: [],
         });
       } else {
         response.status(200).send({
-          status: "Successful",
-          message: "Users Information retrieved",
-          students: result.rows,
+          status: "success",
+          data: result.rows,
         });
       }
     });
@@ -134,9 +158,15 @@ exports.getUserById = (request, response) => {
 
   pool.query("SELECT * FROM users WHERE id = $1", [id], (error, results) => {
     if (error) {
-      throw (error);
+      response.status(400).send({
+        status: "error",
+        error,
+      });
     }
-    response.status(200).json(results.rows);
+    response.status(200).send({
+      status: "success",
+      data: results.rows,
+    });
   });
 };
 
@@ -145,14 +175,17 @@ exports.modifyUser = (request, response) => {
   const { username, email } = request.body;
 
   pool.query(
-    "UPDATE users SET username = $1, email = $2 WHERE id = $3",
-    [username, email, id],
+    "UPDATE users SET username = $1, email = $2 WHERE id = $3", [username, email, id],
     (error) => {
       if (error) {
-        throw error;
+        response.status(400).send({
+          status: "error",
+          error,
+        });
       }
       response.status(200).send({
-        status: `User modified with ID: ${id}`,
+        status: "success",
+        data: `User modified with ID: ${id}`,
       });
     },
   );
@@ -163,10 +196,14 @@ exports.deleteUser = (request, response) => {
 
   pool.query("DELETE FROM users WHERE id = $1", [id], (error) => {
     if (error) {
-      throw error;
+      response.status(400).send({
+        status: "error",
+        error,
+      });
     }
     response.status(200).send({
-      status: `User deleted with ID: ${id}`,
+      status: "success",
+      data: `User deleted with ID: ${id}`,
     });
   });
 };
