@@ -24,47 +24,51 @@ const makeEmail = () => {
   return strEmail;
 };
 
-const randomAdminEmail = makeEmail();
-const randomUserEmail = makeEmail();
-
-
-const adminUser = {
-  firsName: "firstName",
-  lastName: "lastName",
-  userName: "userName",
-  email: randomAdminEmail,
-  password: "password",
-  isStaff: true,
-};
-
 const normalUser = {
   firstName: "firstName",
   lastName: "lastName",
   userName: "userName",
-  email: randomUserEmail,
+  email: makeEmail(),
   password: "password",
   isStaff: false,
 };
 
 
 let createdUserId = null;
-const createdAdminId = null;
 let token = null;
 
 describe("Users end point", () => {
-  it("creates a normal user", (done) => {
+  it("creates a normal user if request sent by staff", (done) => {
     chai
       .request(app)
       .post("/api/v1/users")
+      .set("Authorization", "Staff true")
       .send(normalUser)
       .end((err, res) => {
         if (err) {
           done(err);
         }
         expect(res).to.have.status(202);
-        expect(res.body.status).to.equals("Successful");
-        expect(res.body.result.first_name).to.equals("firstName");
-        createdUserId = res.body.result.id;
+        expect(res.body.status).to.equals("success");
+        expect(res.body.data.first_name).to.equals("firstName");
+        createdUserId = res.body.data.id;
+        done();
+      });
+  });
+
+  it("refuses to create user if request sent by non staff", (done) => {
+    chai
+      .request(app)
+      .post("/api/v1/users")
+      .set("Authorization", "Staff false")
+      .send(normalUser)
+      .end((err, res) => {
+        if (err) {
+          done(err);
+        }
+        expect(res).to.have.status(401);
+        expect(res.body.status).to.equals("error");
+        expect(res.body.error).to.equals("access denied");
         done();
       });
   });
@@ -77,16 +81,15 @@ describe("Users end point", () => {
       .send({
         email: normalUser.email,
         password: normalUser.password,
-        isStaff: normalUser.isStaff,
       })
       .end((err, res) => {
         if (err) {
           done(err);
         }
         expect(res).to.have.status(200);
-        expect(res.body.userId).to.equals(normalUser.email);
-        expect(res.body.token).is.a("string");
-        token = res.body.token;
+        expect(res.body.data.userId).to.equals(normalUser.email);
+        expect(res.body.data.token).is.a("string");
+        token = res.body.data.token;
         done();
       });
   });
@@ -102,8 +105,7 @@ describe("Users end point", () => {
           done(err);
         }
         expect(res).to.have.status(200);
-        expect(res.body.status).to.equals("Successful");
-        expect(res.body.message).to.equals("Users Information retrieved");
+        expect(res.body.status).to.equals("success");
         done();
       });
   });
@@ -118,7 +120,7 @@ describe("Users end point", () => {
           done(err);
         }
         expect(res).to.have.status(200);
-        expect(res.body[0].id).to.equals(createdUserId);
+        expect(res.body.data[0].id).to.equals(createdUserId);
         done();
       });
   });
@@ -137,7 +139,7 @@ describe("Users end point", () => {
           done(err);
         }
         expect(res).to.have.status(200);
-        expect(res.body.status).to.equals(`User modified with ID: ${createdUserId}`);
+        expect(res.body.status).to.equals("success");
         done();
       });
   });
@@ -152,7 +154,7 @@ describe("Users end point", () => {
           done(err);
         }
         expect(res).to.have.status(200);
-        expect(res.body.status).to.equals(`User deleted with ID: ${createdUserId}`);
+        expect(res.body.status).to.equals("success");
         done();
       });
   });

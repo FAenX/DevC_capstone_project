@@ -9,11 +9,11 @@ const router = express.Router();
 // router.post('/signup', userControllers.signup);
 
 router.post("/token", userControllers.token);
-router.post("/", userControllers.createUser);
-router.get("/", auth, userControllers.viewAllUsers);
-router.get("/:id", auth, userControllers.getUserById);
-router.patch("/:id", auth, userControllers.modifyUser);
-router.delete("/:id", auth, userControllers.deleteUser);
+router.post("/", auth.isStaff, userControllers.createUser);
+router.get("/", auth.verifyToken, userControllers.viewAllUsers);
+router.get("/:id", auth.verifyToken, userControllers.getUserById);
+router.patch("/:id", auth.verifyToken, userControllers.modifyUser);
+router.delete("/:id", auth.verifyToken, userControllers.deleteUser);
 
 
 export default router;

@@ -4,13 +4,13 @@
   "description": "'DevC capstone project'",
   "main": "server.js",
   "scripts": {
-    "test": "babel-node --exec ./node_modules/.bin/mocha --require ./node_modules/@babel/register --timeout 20000",
+    "test": "nodemon --exec ./node_modules/.bin/mocha --require ./node_modules/@babel/register --timeout 20000",
     "build": "babel ./ --out-dir ./dist --source-maps",
     "start": "nodemon --exec babel-node server.js",
     "createusersdb": "babel-node ./services/db.js createUsersTable",
     "createcommentsdb": "babel-node ./services/db.js createCommentsTable",
     "creategifsdb": "babel-node ./services/db.js createGifsTable",
-    "debug": "node --inspect-brk ./dist/server.js"
+    "debug": "nodemon --exec babel-node --inspect  ./dist/server.js"
   },
   "repository": {
     "type": "git",
