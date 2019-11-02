@@ -71,20 +71,12 @@ exports.createUser = (request, response) => {
     userName: request.body.userName,
     email: request.body.email,
     password: request.body.password,
-<<<<<<< HEAD
-    is_staff: request.body.is_staff,
-  };
-
-
-  let hashed;
-=======
     isStaff: request.body.isStaff,
   };
 
   let hashedPassword;
 
   // hash password before saving
->>>>>>> admin_can_create_employee_account
   bcrypt.hash(request.body.password, 10).then(
     (hash) => {
       hashedPassword = hash;
