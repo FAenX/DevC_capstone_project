@@ -4,7 +4,7 @@
   "description": "'DevC capstone project'",
   "main": "server.js",
   "scripts": {
-    "test": "babel-node --exec ./node_modules/.bin/mocha --require ./node_modules/@babel/register --timeout 20000",
+    "test": "babel-node ./node_modules/.bin/mocha --require ./node_modules/@babel/register --timeout 20000",
     "build": "babel ./ --out-dir ./dist --source-maps",
     "start": "nodemon --exec babel-node server.js",
     "createusersdb": "babel-node ./services/db.js createUsersTable",
