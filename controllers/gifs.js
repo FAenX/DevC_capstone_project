@@ -100,3 +100,21 @@ exports.deleteGif = (request, response) => {
     });
   });
 };
+
+exports.patchGif = (request, response) => {
+  const id = parseInt(request.params.id);
+  const { comment } = request.body;
+
+  pool.query("UPDATE gifs SET comment = $1 WHERE id = $2", [comment, id], (error) => {
+    if (error) {
+      response.status(400).send({
+        status: "error",
+        error,
+      });
+    }
+    response.status(200).send({
+      status: "success",
+      data: `new comment: ${comment}`,
+    });
+  });
+};
