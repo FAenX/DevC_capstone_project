@@ -10,13 +10,14 @@ const config = {
   idleTimeoutMillis: 30000,
 };
 
+
 const pool = new pg.Pool(config);
 
 pool.on("connect", () => {
   console.log("connected to the Database");
 });
 
-exports.createUsersTable = () => {
+exports.createTables = () => {
   const users = `CREATE TABLE IF NOT EXISTS
       users(
         id SERIAL PRIMARY KEY,
@@ -28,87 +29,45 @@ exports.createUsersTable = () => {
         is_staff BOOLEAN
       )`;
 
-  return pool.query(users)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
-
-exports.createCommentsTable = () => {
   const comments = `CREATE TABLE IF NOT EXISTS
       comments(
         id SERIAL PRIMARY KEY,
         comment VARCHAR(128) NOT NULL,
-        FOREIGN KEY (user) REFERENCES users (id) NOT NULL,
-        FOREIGN KEY (gif) REFERENCES gifs (id) NULL,
-        FOREIGN KEY (article) REFERENCES articles (id)  NULL,     
+        FOREIGN KEY (user_id) REFERENCES users (id) NOT NULL,
+        FOREIGN KEY (gif_id) REFERENCES gifs (id) NULL,
+        FOREIGN KEY (article_id) REFERENCES articles (id)  NULL,     
 
       )`;
 
-  return pool.query(comments)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
+  const gifs = `CREATE TABLE IF NOT EXISTS gifs (
+    id SERIAL PRIMARY KEY, 
+	  user_id INTEGER REFERENCES users(id),
+    url VARCHAR,
+    gif_comment VARCHAR,
+    title VARCHAR
+  )`;
 
-exports.createGifsTable = () => {
-  const gifs = `CREATE TABLE IF NOT EXISTS
-      gifs(
-        id SERIAL PRIMARY KEY,
-        address VARCHAR(128) NOT NULL,
-        FOREIGN KEY (user) REFERENCES users (id)
-
-      )`;
-
-  return pool.query(gifs)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
-};
-
-exports.createArticlesTable = () => {
   const articles = `CREATE TABLE IF NOT EXISTS
     articles(
       id SERIAL PRIMARY KEY,
       article VARCHAR(128) NOT NULL,
-      FOREIGN KEY (user) REFERENCES users (id),
+      FOREIGN KEY (user_id) REFERENCES users (id),
 
 
     )`;
 
-  return pool.query(articles)
-    .then((res) => {
-      console.log(res);
-      pool.end();
-    })
-    .catch((err) => {
-      console.log(err);
-      pool.end();
-    });
+  pool.query(gifs).then((res) => {
+    console.log(res);
+    pool.end();
+  }).catch((err) => {
+    console.log(err);
+    pool.end();
+  });
 };
-
-
 pool.on("remove", () => {
   console.log("client removed");
   process.exit(0);
 });
 
-
-// export pool and createTables to be accessible  from an where within the application
 
 require("make-runnable");

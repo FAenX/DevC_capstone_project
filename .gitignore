@@ -5,6 +5,7 @@ aws_keys/
 linter.sh
 spec/
 .eslintignore
+images/
 
 lib/
 

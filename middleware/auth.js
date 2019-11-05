@@ -10,7 +10,7 @@ exports.verifyToken = (req, res, next) => {
     if (req.body.userId && req.body.userId !== userId) {
       res.status(401).send({
         status: "error",
-        error: "Invalid user ID",
+        error: "access denied",
       });
     } else {
       next();
@@ -18,7 +18,7 @@ exports.verifyToken = (req, res, next) => {
   } catch (error) {
     res.status(401).send({
       status: "error",
-      error: "Invalid request",
+      error: "access denied",
     });
   }
 };
@@ -38,16 +38,6 @@ exports.isStaff = (req, res, next) => {
     res.status(400).send({
       status: "error",
       error: "invalid request",
-    });
-  }
-};
-
-exports.isAdmin = (req, res, next) => {
-  try {
-    // const
-  } catch (error) {
-    res.status(401).json({
-      error: new Error("Invalid request"),
     });
   }
 };

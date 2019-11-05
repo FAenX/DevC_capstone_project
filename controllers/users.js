@@ -21,14 +21,13 @@ const pool = new pg.Pool(config);
 exports.token = (request, response) => {
   const userEmail = request.body.email;
   const userPassword = request.body.password;
-  const isStaff = request.body.is_staff;
 
   // check if user is a registered user
   pool.query("SELECT * FROM users WHERE email = $1", [userEmail], (error, results) => {
     if (error) {
       throw (error);
     }
-    const { email, password, is_staff } = results.rows[0];
+    const { email, password } = results.rows[0];
 
     // compared saved hashed password to supplied password
     bcrypt.compare(userPassword, password).then(
