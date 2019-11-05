@@ -56,7 +56,7 @@ describe("Gifs Endpoint", () => {
       expect(response.body.status).to.equals("success");
       expect(response.body.data).to.be.an("array");
       expect(response.body.data).to.be.lengthOf(1);
-      expect(response.body.data[0]).to.have.nested.property("id");
+      expect(response.body.data[0]).to.have.property("id");
       expect(response.body.data[0]).to.have.property("user_id");
       expect(response.body.data[0]).to.have.property("title");
       expect(response.body.data[0]).to.have.property("url");

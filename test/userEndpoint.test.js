@@ -47,7 +47,13 @@ describe("Users end point", () => {
 
       expect(response).to.have.status(202);
       expect(response.body.status).to.equals("success");
-      expect(response.body.data.first_name).to.equals("firstName");
+      expect(response.body.data).to.have.property("id");
+      expect(response.body.data).to.have.property("username");
+      expect(response.body.data).to.have.property("email");
+      expect(response.body.data).to.have.property("password");
+      expect(response.body.data).to.have.property("first_name");
+      expect(response.body.data).to.have.property("last_name");
+      expect(response.body.data).to.have.property("is_staff");
       createdUserId = response.body.data.id;
     });
 
@@ -88,6 +94,7 @@ describe("Users end point", () => {
 
       expect(response).to.have.status(200);
       expect(response.body.status).to.equals("success");
+      expect(response.body.data).to.be.an("array");
     });
 
   it("retrieves a single users",
@@ -98,6 +105,13 @@ describe("Users end point", () => {
 
       expect(response).to.have.status(200);
       expect(response.body.data[0].id).to.equals(createdUserId);
+      expect(response.body.data[0]).to.have.property("id");
+      expect(response.body.data[0]).to.have.property("username");
+      expect(response.body.data[0]).to.have.property("email");
+      expect(response.body.data[0]).to.have.property("password");
+      expect(response.body.data[0]).to.have.property("first_name");
+      expect(response.body.data[0]).to.have.property("last_name");
+      expect(response.body.data[0]).to.have.property("is_staff");
     });
 
   it("modifies a user",

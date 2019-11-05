@@ -43,27 +43,23 @@ exports.createGif = (request, response) => {
 };
 
 exports.getAllGifs = (request, response) => {
-  pool.connect((err, client, done) => {
-    const query = "SELECT * FROM gifs";
-    client.query(query, (error, result) => {
-      done();
-      if (error) {
-        response.status(400).send({
-          status: "error",
-          error,
-        });
-      } else if (result.rows < "1") {
-        response.status(200).send({
-          status: "success",
-          data: [],
-        });
-      } else {
-        response.status(200).send({
-          status: "success",
-          data: result.rows,
-        });
-      }
-    });
+  pool.query("SELECT * FROM gifs", (error, result) => {
+    if (error) {
+      response.status(400).send({
+        status: "error",
+        error,
+      });
+    } else if (result.rows < "1") {
+      response.status(200).send({
+        status: "success",
+        data: [],
+      });
+    } else {
+      response.status(200).send({
+        status: "success",
+        data: result.rows,
+      });
+    }
   });
 };
 
