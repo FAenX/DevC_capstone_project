@@ -38,124 +38,90 @@ let createdUserId = null;
 let token = null;
 
 describe("Users end point", () => {
-  it("creates a normal user if request sent by staff", (done) => {
-    chai
-      .request(app)
-      .post("/api/v1/users")
-      .set("Authorization", "Staff true")
-      .send(normalUser)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        expect(res).to.have.status(202);
-        expect(res.body.status).to.equals("success");
-        expect(res.body.data.first_name).to.equals("firstName");
-        createdUserId = res.body.data.id;
-        done();
-      });
-  });
+  it("creates a normal user if request sent by staff",
+    async () => {
+      const response = await chai.request(app)
+        .post("/api/v1/users")
+        .set("Authorization", "Staff true")
+        .send(normalUser);
 
-  it("refuses to create user if request sent by non staff", (done) => {
-    chai
-      .request(app)
-      .post("/api/v1/users")
-      .set("Authorization", "Staff false")
-      .send(normalUser)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        expect(res).to.have.status(401);
-        expect(res.body.status).to.equals("error");
-        expect(res.body.error).to.equals("access denied");
-        done();
-      });
-  });
+      expect(response).to.have.status(202);
+      expect(response.body.status).to.equals("success");
+      expect(response.body.data.first_name).to.equals("firstName");
+      createdUserId = response.body.data.id;
+    });
+
+  it("refuses to create user if request sent by non staff",
+    async () => {
+      const response = await chai.request(app)
+        .post("/api/v1/users")
+        .set("Authorization", "Staff false")
+        .send(normalUser);
+
+      expect(response).to.have.status(401);
+      expect(response.body.status).to.equals("error");
+      expect(response.body.error).to.equals("access denied");
+    });
 
 
-  it("gets a user token", (done) => {
-    chai
-      .request(app)
-      .post("/api/v1/users/token")
-      .send({
-        email: normalUser.email,
-        password: normalUser.password,
-      })
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        expect(res).to.have.status(200);
-        expect(res.body.data.userId).to.equals(normalUser.email);
-        expect(res.body.data.token).is.a("string");
-        token = res.body.data.token;
-        done();
-      });
-  });
+  it("gets a user token",
+    async () => {
+      const response = await chai.request(app)
+        .post("/api/v1/users/token")
+        .send({
+          email: normalUser.email,
+          password: normalUser.password,
+        });
+
+      expect(response).to.have.status(200);
+      expect(response.body.data.userId).to.equals(normalUser.email);
+      expect(response.body.data.token).is.a("string");
+      token = response.body.data.token;
+    });
 
 
-  it("retrieves all users", (done) => {
-    chai
-      .request(app)
-      .get("/api/v1/users")
-      .set("Authorization", `Bearer ${token}`)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        expect(res).to.have.status(200);
-        expect(res.body.status).to.equals("success");
-        done();
-      });
-  });
+  it("retrieves all users",
+    async () => {
+      const response = await chai.request(app)
+        .get("/api/v1/users")
+        .set("Authorization", `Bearer ${token}`);
 
-  it("retrieves a single users", (done) => {
-    chai
-      .request(app)
-      .get(`/api/v1/users/${createdUserId}`)
-      .set("Authorization", `Bearer ${token}`)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        expect(res).to.have.status(200);
-        expect(res.body.data[0].id).to.equals(createdUserId);
-        done();
-      });
-  });
+      expect(response).to.have.status(200);
+      expect(response.body.status).to.equals("success");
+    });
 
-  it("modifies a user", (done) => {
-    chai
-      .request(app)
-      .patch(`/api/v1/users/${createdUserId}`)
-      .set("Authorization", `Bearer ${token}`)
-      .send({
-        username: "another_name",
-        email: "another_name",
-      })
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        expect(res).to.have.status(200);
-        expect(res.body.status).to.equals("success");
-        done();
-      });
-  });
+  it("retrieves a single users",
+    async () => {
+      const response = await chai.request(app)
+        .get(`/api/v1/users/${createdUserId}`)
+        .set("Authorization", `Bearer ${token}`);
 
-  it("deletes a user", (done) => {
-    chai
-      .request(app)
-      .delete(`/api/v1/users/${createdUserId}`)
-      .set("Authorization", `Bearer ${token}`)
-      .end((err, res) => {
-        if (err) {
-          done(err);
-        }
-        expect(res).to.have.status(200);
-        expect(res.body.status).to.equals("success");
-        done();
-      });
-  });
+      expect(response).to.have.status(200);
+      expect(response.body.data[0].id).to.equals(createdUserId);
+    });
+
+  it("modifies a user",
+    async () => {
+      const response = await chai.request(app)
+        .patch(`/api/v1/users/${createdUserId}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          username: "another_name",
+          email: "another_email",
+        });
+
+      expect(response).to.have.status(200);
+      expect(response.body.status).to.equals("success");
+    });
+
+
+  it("deletes a user",
+    async () => {
+      const response = await chai.request(app)
+        .delete(`/api/v1/users/${createdUserId}`)
+        .set("Authorization", `Bearer ${token}`);
+
+      expect(response).to.have.status(200);
+      expect(response.body.status).to.equals("success");
+    });
 });
