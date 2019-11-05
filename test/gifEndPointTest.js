@@ -9,6 +9,7 @@ chai.use(chaiHttp);
 
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzNDQxZWdkMWdkQDRiM2EzMTUyLmNvbSIsImlhdCI6MTU3Mjk3MDkxNCwiZXhwIjoxNTczMDU3MzE0fQ.A9a6QLgy2q8pDlvwDtF8CSDv5T-yXSJgWcOeXNCAvZg";
 let gifId;
+const currentPath = process.cwd();
 
 describe("Gifs Endpoint", () => {
   it("should create a new gif image",
@@ -20,7 +21,7 @@ describe("Gifs Endpoint", () => {
         .field("comment", "a very long comment")
         .field("userId", 1)
         .attach("file",
-          fs.readFileSync("/home/emmanuel/Documents/class/devCAndela/coding/capstone_project/DevC_capstone_project/backend/images/funny.jpg1572970658275.undefined"),
+          fs.readFileSync(`${currentPath}/test/image.png`),
           "preview.png");
       expect(response.body).to.be.an("object");
       expect(response.body.status).to.equal("success");
