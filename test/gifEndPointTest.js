@@ -73,7 +73,5 @@ describe("Gifs Endpoint", () => {
 
       expect(response).to.have.status(200);
       expect(response.body.status).to.equals("success");
-      expect(response.body.status).to.equals("success");
-      expect(response.body.status).to.equals("success");
     });
 });

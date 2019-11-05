@@ -105,7 +105,7 @@ exports.patchGif = (request, response) => {
   const id = parseInt(request.params.id);
   const { comment } = request.body;
 
-  pool.query("UPDATE gifs SET comment = $1 WHERE id = $2", [comment, id], (error) => {
+  pool.query("UPDATE gifs SET gif_comment = $1 WHERE id = $2", [comment, id], (error) => {
     if (error) {
       response.status(400).send({
         status: "error",
