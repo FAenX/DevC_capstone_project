@@ -11,7 +11,7 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzNDQxZWdkMWdk
 let gifId;
 const currentPath = process.cwd();
 
-describe("Gifs Endpoint", () => {
+describe("Gifs Endpoint ", () => {
   it("should create a new gif image",
     async () => {
       const response = await chai.request(app)
