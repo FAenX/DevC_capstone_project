@@ -14,7 +14,7 @@ const config = {
 const pool = new pg.Pool(config);
 
 exports.createGif = (request, response) => {
-  const url = `${request.protocol}://${request.get("host")}`;
+  // const url = `${request.protocol}://${request.get("host")}`;
   const { title, comment, userId } = request.body;
   // const imageUrl = `${url}/images/${request.file.filename}`;
   const imageUrl = `http://devc-capstone-project.s3-website.us-east-2.amazonaws.com/images/${request.file.filename}`;
