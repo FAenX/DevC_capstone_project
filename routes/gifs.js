@@ -8,9 +8,9 @@ const router = express.Router();
 
 // gifs
 router.post("/", multer, gifControllers.createGif);
-router.patch("/:id", auth.verifyToken, gifControllers.patchGif);
-router.get("/", auth.verifyToken, gifControllers.getAllGifs);
-router.get("/:id", auth.verifyToken, gifControllers.getGif);
-router.delete("/:id", auth.verifyToken, gifControllers.deleteGif);
+router.patch("/:id", gifControllers.patchGif);
+router.get("/", gifControllers.getAllGifs);
+router.get("/:id", gifControllers.getGif);
+router.delete("/:id", gifControllers.deleteGif);
 
 export default router;
