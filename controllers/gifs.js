@@ -1,5 +1,7 @@
 import pg from "pg";
-
+import cloudinary from "cloudinary";
+import { dataUri } from "../middleware/multerUpload";
+import { uploader } from "../cloudinaryConfig";
 
 const config = {
   host: "devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com",
@@ -15,9 +17,33 @@ const pool = new pg.Pool(config);
 
 exports.createGif = (request, response) => {
   // const url = `${request.protocol}://${request.get("host")}`;
-  const { title, comment, userId } = request.body;
-  // const imageUrl = `${url}/images/${request.file.filename}`;
-  const imageUrl = `http://devc-capstone-project.s3-website.us-east-2.amazonaws.com/images/${request.file.filename}`;
+
+
+  if (request.file) {
+    console.log(request.file);
+    const file = dataUri(request).content;
+    return uploader.upload(file).then((result) => {
+      const image = result.url;
+      return response.status(200).json({
+        messge: "Your image has been uploded successfully to cloudinary",
+        data: {
+          image,
+        },
+      });
+    }).catch((err) => response.status(400).json({
+      messge: "someting went wrong while processing your request",
+      data: {
+        err,
+      },
+    }));
+  }
+
+  const {
+    title, comment, userId, imageUrl,
+  } = request.body;
+
+  console.log("req.body :", request.body);
+  console.log("req.file :", request.file);
 
 
   const query = "INSERT INTO gifs(title, gif_comment, url, user_id) VALUES($1,$2,$3,$4) RETURNING *";
@@ -27,19 +53,18 @@ exports.createGif = (request, response) => {
     imageUrl,
     userId,
   ];
-  pool.query(query, values, (err, result) => {
-    if (err) {
-      response.status(400).send({
+  pool.query(query, values, (error, result) => {
+    if (error) {
+      return response.status(400).send({
         status: "error",
-        err,
-      });
-    } else {
-      response.status(202).send({
-        status: "success",
-        data: result.rows[0],
-
+        error,
       });
     }
+    return response.status(202).send({
+      status: "success",
+      data: result.rows[0],
+
+    });
   });
 };
 

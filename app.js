@@ -1,9 +1,16 @@
-import path from "path";
+import { path, resolve } from "path";
 import express from "express";
-import bodyParser from "body-parser";
+import { urlencoded, json } from "body-parser";
+
+import dotenv from "dotenv";
+import cloudinary from "cloudinary";
+import { cloudinaryConfig } from "./cloudinaryConfig";
+
 
 import userRoutes from "./routes/users";
 import gifRoutes from "./routes/gifs";
+
+dotenv.config();
 
 const app = express();
 
@@ -15,12 +22,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
+app.use(urlencoded({ extended: false }));
+app.use("*", cloudinaryConfig);
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use(json());
+
+// app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/api/v1/users/", userRoutes);
 app.use("/api/v1/gifs/", gifRoutes);
 
-
-module.exports = app;
+export default app;

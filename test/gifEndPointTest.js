@@ -17,9 +17,7 @@ describe("Gifs Endpoint ", () => {
       const response = await chai.request(app)
         .post("/api/v1/gifs")
         .set("Content-Type", "application/x-www-form-urlencoded")
-        .field("title", "title")
-        .field("comment", "a very long comment")
-        .field("userId", 1)
+
         .attach("file",
           fs.readFileSync(`${currentPath}/test/image.png`),
           "preview.png");
