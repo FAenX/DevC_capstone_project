@@ -120,8 +120,8 @@ describe("Users end point", () => {
         .patch(`/api/v1/users/${createdUserId}/`)
         .set("Authorization", `Bearer ${token}`)
         .send({
-          username: "another_name",
-          email: "another_email",
+          username: "another452_name",
+          email: "another123_email",
         });
 
       expect(response).to.have.status(200);
