@@ -47,6 +47,7 @@
     "re": "^0.1.4",
     "react-bootstrap": "^1.0.0-beta.14",
     "request": "^2.88.0",
+    "swagger-ui-express": "^4.1.2",
     "update": "^0.7.4"
   },
   "devDependencies": {
@@ -64,11 +65,13 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "express-swagger-generator": "^1.1.15",
     "install": "^0.13.0",
     "jasmine": "^3.5.0",
     "npm": "^6.13.0",
     "react": "^16.11.0",
     "regenerator-runtime": "^0.13.3",
+    "swagger-jsdoc": "^3.4.0",
     "webpack": "^4.41.2"
   }
 }

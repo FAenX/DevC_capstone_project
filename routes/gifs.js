@@ -7,7 +7,6 @@ import { multerUploads } from "../middleware/multerUpload";
 
 const router = express.Router();
 
-// gifs
 router.post("/", multerUploads, gifControllers.createGif);
 router.patch("/:id", gifControllers.patchGif);
 router.get("/", gifControllers.getAllGifs);

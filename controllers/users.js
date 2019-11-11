@@ -17,7 +17,6 @@ const config = {
 
 const pool = new pg.Pool(config);
 
-// user request token
 exports.token = (request, response) => {
   const userEmail = request.body.email;
   const userPassword = request.body.password;

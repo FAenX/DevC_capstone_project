@@ -16,20 +16,52 @@ const config = {
 const pool = new pg.Pool(config);
 
 exports.createGif = (request, response) => {
-  // const url = `${request.protocol}://${request.get("host")}`;
-
-
+  
   if (request.file) {
     console.log(request.file);
     const file = dataUri(request).content;
     return uploader.upload(file).then((result) => {
-      const image = result.url;
+      const image = result.url;  
+      let dbResults = null;
+
+      const {
+        title, comment, userId
+      } = request.body;
+
+      const query = "INSERT INTO gifs(title, gif_comment, url, user_id) VALUES($1,$2,$3,$4) RETURNING *";
+      const values = [
+        title,
+        comment,
+        image,
+        userId,
+      ];
+      async () => {
+       writeTodb = await pool.query(query, values, (error, result) => {
+        
+
+        if (error) {
+          return response.status(400).send({
+            status: "error",
+            error,
+          });
+        }else if (result){
+          dbResults = result.rows[0];
+          console.log(dbResults)
+        }
+        
+      })};
+      
+
       return response.status(200).json({
+        status: "success",
         messge: "Your image has been uploded successfully to cloudinary",
         data: {
           image,
+          results: dbResults
         },
       });
+
+
     }).catch((err) => response.status(400).json({
       messge: "someting went wrong while processing your request",
       data: {
@@ -38,34 +70,9 @@ exports.createGif = (request, response) => {
     }));
   }
 
-  const {
-    title, comment, userId, imageUrl,
-  } = request.body;
-
-  console.log("req.body :", request.body);
-  console.log("req.file :", request.file);
 
 
-  const query = "INSERT INTO gifs(title, gif_comment, url, user_id) VALUES($1,$2,$3,$4) RETURNING *";
-  const values = [
-    title,
-    comment,
-    imageUrl,
-    userId,
-  ];
-  pool.query(query, values, (error, result) => {
-    if (error) {
-      return response.status(400).send({
-        status: "error",
-        error,
-      });
-    }
-    return response.status(202).send({
-      status: "success",
-      data: result.rows[0],
-
-    });
-  });
+  
 };
 
 exports.getAllGifs = (request, response) => {

@@ -11,24 +11,24 @@ const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzNDQxZWdkMWdk
 let gifId;
 const currentPath = process.cwd();
 
+
 describe("Gifs Endpoint ", () => {
   it("should create a new gif image",
     async () => {
       const response = await chai.request(app)
         .post("/api/v1/gifs")
         .set("Content-Type", "application/x-www-form-urlencoded")
-
-        .attach("file",
+        .field("title", "title")
+        .field("comment", "a very long comment")
+        .field("userId", 1)
+        .attach("gif",
           fs.readFileSync(`${currentPath}/test/image.png`),
           "preview.png");
       expect(response.body).to.be.an("object");
       expect(response.body.status).to.equal("success");
-      expect(response.body.data).to.have.property("id");
-      expect(response.body.data).to.have.property("user_id");
-      expect(response.body.data).to.have.property("title");
-      expect(response.body.data).to.have.property("url");
-      expect(response.body.data).to.have.property("gif_comment");
-      gifId = response.body.data.id;
+      expect(response.body.data).to.have.property("image");
+      //expect(response.body.data).to.have.property("results");
+      // gifId = response.body.data.results.id;
     });
 
   it("returns all gifs",
