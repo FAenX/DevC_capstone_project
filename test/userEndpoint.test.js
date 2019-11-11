@@ -117,11 +117,11 @@ describe("Users end point", () => {
   it("modifies a user",
     async () => {
       const response = await chai.request(app)
-        .patch(`/api/v1/users/${createdUserId}`)
+        .patch(`/api/v1/users/${createdUserId}/`)
         .set("Authorization", `Bearer ${token}`)
         .send({
-          username: "another_name",
-          email: "another_email",
+          username: "another452_name",
+          email: "another123_email",
         });
 
       expect(response).to.have.status(200);

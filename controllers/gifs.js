@@ -1,5 +1,6 @@
 import pg from "pg";
-
+import { dataUri } from "../middleware/multerUpload";
+import { uploader } from "../cloudinaryConfig";
 
 const config = {
   host: "devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com",
@@ -14,33 +15,65 @@ const config = {
 const pool = new pg.Pool(config);
 
 exports.createGif = (request, response) => {
-  // const url = `${request.protocol}://${request.get("host")}`;
-  const { title, comment, userId } = request.body;
-  // const imageUrl = `${url}/images/${request.file.filename}`;
-  const imageUrl = `http://devc-capstone-project.s3-website.us-east-2.amazonaws.com/images/${request.file.filename}`;
+  if (request.file) {
+    const file = dataUri(request).content;
+    return uploader.upload(file).then((result) => {
+      const image = result.url;
 
+      const {
+        title, comment, userId,
+      } = request.body;
 
-  const query = "INSERT INTO gifs(title, gif_comment, url, user_id) VALUES($1,$2,$3,$4) RETURNING *";
-  const values = [
-    title,
-    comment,
-    imageUrl,
-    userId,
-  ];
-  pool.query(query, values, (err, result) => {
-    if (err) {
-      response.status(400).send({
-        status: "error",
+      const query = "INSERT INTO gifs(title, gif_comment, url, user_id) VALUES($1,$2,$3,$4) RETURNING *";
+      const values = [
+        title,
+        comment,
+        image,
+        userId,
+      ];
+
+      // async/await - check out a client
+
+      // pool.connect((err, client, done) => {
+      //   if (err) throw err;
+      //   client.query(query, values, (error, res) => {
+      //     done();
+      //     if (error) {
+      //       return response.status(400).send({
+      //         status: "error",
+      //         error: error.stack,
+      //       });
+      //     }
+
+      //     gif = res.rows[0];
+      //   });
+      // });
+
+      (async () => {
+        const client = await pool.connect();
+        try {
+          const res = await client.query(query, values);
+          return response.status(200).json({
+            status: "success",
+            messge: "Your image has been uploded successfully to cloudinary",
+            data: {
+              image,
+              results: res.rows[0],
+            },
+          });
+        } finally {
+          // Make sure to release the client before any error handling,
+          // just in case the error handling itself throws an error.
+          client.release();
+        }
+      })().catch((e) => console.log(e.stack));
+    }).catch((err) => response.status(400).json({
+      messge: "someting went wrong while processing your request",
+      data: {
         err,
-      });
-    } else {
-      response.status(202).send({
-        status: "success",
-        data: result.rows[0],
-
-      });
-    }
-  });
+      },
+    }));
+  }
 };
 
 exports.getAllGifs = (request, response) => {

@@ -1,11 +1,32 @@
 import path from "path";
 import express from "express";
-import bodyParser from "body-parser";
+import { urlencoded, json } from "body-parser";
+
+import dotenv from "dotenv";
+import cloudinary from "cloudinary";
+import { cloudinaryConfig } from "./cloudinaryConfig";
+
+
+import { swaggerDefinition, options, swaggerSpec }  from "./swaggerDef";
+
 
 import userRoutes from "./routes/users";
 import gifRoutes from "./routes/gifs";
 
+
+dotenv.config();
+
 const app = express();
+
+// app.use("/images", express.static(path.join(__dirname, "images")));
+app.get('/swagger.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
+app.get('/docs', (req, res) => {
+  res.sendFile(path.join(__dirname, 'redoc.html'));
+});
 
 
 app.use((req, res, next) => {
@@ -15,12 +36,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(bodyParser.json());
+app.use(urlencoded({ extended: false }));
+app.use("*", cloudinaryConfig);
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use(json());
+
+
+
 
 app.use("/api/v1/users/", userRoutes);
 app.use("/api/v1/gifs/", gifRoutes);
 
-
-module.exports = app;
+export default app;
