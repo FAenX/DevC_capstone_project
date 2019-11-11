@@ -1,5 +1,4 @@
 import pg from "pg";
-import cloudinary from "cloudinary";
 import { dataUri } from "../middleware/multerUpload";
 import { uploader } from "../cloudinaryConfig";
 
@@ -16,16 +15,13 @@ const config = {
 const pool = new pg.Pool(config);
 
 exports.createGif = (request, response) => {
-  
   if (request.file) {
-    console.log(request.file);
     const file = dataUri(request).content;
     return uploader.upload(file).then((result) => {
-      const image = result.url;  
-      let dbResults = null;
+      const image = result.url;
 
       const {
-        title, comment, userId
+        title, comment, userId,
       } = request.body;
 
       const query = "INSERT INTO gifs(title, gif_comment, url, user_id) VALUES($1,$2,$3,$4) RETURNING *";
@@ -35,33 +31,42 @@ exports.createGif = (request, response) => {
         image,
         userId,
       ];
-      async () => {
-       writeTodb = await pool.query(query, values, (error, result) => {
-        
 
-        if (error) {
-          return response.status(400).send({
-            status: "error",
-            error,
+      // async/await - check out a client
+
+      // pool.connect((err, client, done) => {
+      //   if (err) throw err;
+      //   client.query(query, values, (error, res) => {
+      //     done();
+      //     if (error) {
+      //       return response.status(400).send({
+      //         status: "error",
+      //         error: error.stack,
+      //       });
+      //     }
+
+      //     gif = res.rows[0];
+      //   });
+      // });
+
+      (async () => {
+        const client = await pool.connect();
+        try {
+          const res = await client.query(query, values);
+          return response.status(200).json({
+            status: "success",
+            messge: "Your image has been uploded successfully to cloudinary",
+            data: {
+              image,
+              results: res.rows[0],
+            },
           });
-        }else if (result){
-          dbResults = result.rows[0];
-          console.log(dbResults)
+        } finally {
+          // Make sure to release the client before any error handling,
+          // just in case the error handling itself throws an error.
+          client.release();
         }
-        
-      })};
-      
-
-      return response.status(200).json({
-        status: "success",
-        messge: "Your image has been uploded successfully to cloudinary",
-        data: {
-          image,
-          results: dbResults
-        },
-      });
-
-
+      })().catch((e) => console.log(e.stack));
     }).catch((err) => response.status(400).json({
       messge: "someting went wrong while processing your request",
       data: {
@@ -69,10 +74,6 @@ exports.createGif = (request, response) => {
       },
     }));
   }
-
-
-
-  
 };
 
 exports.getAllGifs = (request, response) => {

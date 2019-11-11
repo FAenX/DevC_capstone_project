@@ -117,7 +117,7 @@ describe("Users end point", () => {
   it("modifies a user",
     async () => {
       const response = await chai.request(app)
-        .patch(`/api/v1/users/${createdUserId}`)
+        .patch(`/api/v1/users/${createdUserId}/`)
         .set("Authorization", `Bearer ${token}`)
         .send({
           username: "another_name",

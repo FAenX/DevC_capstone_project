@@ -27,15 +27,15 @@ describe("Gifs Endpoint ", () => {
       expect(response.body).to.be.an("object");
       expect(response.body.status).to.equal("success");
       expect(response.body.data).to.have.property("image");
-      //expect(response.body.data).to.have.property("results");
-      // gifId = response.body.data.results.id;
+      expect(response.body.data).to.have.property("results");
+      gifId = response.body.data.results.id;
     });
 
   it("returns all gifs",
     async () => {
       const response = await chai.request(app)
         .get("/api/v1/gifs")
-        .set("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzNDQxZWdkMWdkQDRiM2EzMTUyLmNvbSIsImlhdCI6MTU3Mjk3MDkxNCwiZXhwIjoxNTczMDU3MzE0fQ.A9a6QLgy2q8pDlvwDtF8CSDv5T-yXSJgWcOeXNCAvZg")
+        .set("Authorization", `Bearer ${token}`)
         .send();
       expect(response).to.have.status(200);
       expect(response.body.status).to.equals("success");

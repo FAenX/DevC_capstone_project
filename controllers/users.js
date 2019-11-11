@@ -105,7 +105,7 @@ exports.createUser = (request, response) => {
       if (err) {
         response.status(400).send({
           status: "error",
-          err,
+          err: err.stack,
         });
       } else {
         response.status(202).send({
@@ -170,7 +170,7 @@ exports.modifyUser = (request, response) => {
       if (error) {
         response.status(400).send({
           status: "error",
-          error,
+          error: error.stack,
         });
       }
       response.status(200).send({
