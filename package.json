@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/FAenX/DevC_capstone_project#readme",
   "engines": {
-    "node": ">=10.0.0",
-    "npm": ">=6.0.0"
+    "node": "12.0.0",
+    "npm": "6.12.0"
   },
-  
+
   "dependencies": {
     "@babel/polyfill": "^7.7.0",
     "aws-sdk": "^2.570.0",
