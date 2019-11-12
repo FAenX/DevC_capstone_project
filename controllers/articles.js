@@ -34,3 +34,22 @@ exports.createArticle = (request, response) => {
     }
   });
 };
+
+exports.getAllArticle = (request, response) => {
+  const query = "SELECT * FROM articles";
+
+  pool.query(query, (err, result) => {
+    if (err) {
+      response.status(400).send({
+        status: "error",
+        err: err.stack,
+      });
+    } else {
+      response.status(200).send({
+        status: "success",
+        data: result.rows[0],
+
+      });
+    }
+  });
+};
