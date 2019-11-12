@@ -1,6 +1,11 @@
 {
-    "presets": ["@babel/preset-env",[{
-        "exclude": ["@babel/plugin-proposal-unicode-property-regex", "@babel/plugin-transform-unicode-regex"]
-    }]],
+    "presets": ["@babel/preset-env", [
+        {
+        "exclude": ["@babel/plugin-proposal-unicode-property-regex", 
+            "@babel/plugin-transform-unicode-regex"
+        ]
+    }
+]
+],
     "plugins": ["@babel/plugin-proposal-export-default-from"]
-  }
+}
