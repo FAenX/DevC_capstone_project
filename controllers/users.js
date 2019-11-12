@@ -15,6 +15,7 @@ const config = {
   idleTimeoutMillis: 30000,
 };
 
+
 const pool = new pg.Pool(config);
 
 exports.token = (request, response) => {

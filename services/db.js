@@ -35,28 +35,51 @@ exports.createTables = () => {
         comment VARCHAR(128) NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users (id) NOT NULL,
         FOREIGN KEY (gif_id) REFERENCES gifs (id) NULL,
-        FOREIGN KEY (article_id) REFERENCES articles (id)  NULL,     
+        FOREIGN KEY (article_id) REFERENCES articles (id)  NULL    
 
       )`;
 
   const gifs = `CREATE TABLE IF NOT EXISTS gifs (
-    id SERIAL PRIMARY KEY, 
-	  user_id INTEGER REFERENCES users(id),
-    url VARCHAR,
-    gif_comment VARCHAR,
-    title VARCHAR
-  )`;
+        id SERIAL PRIMARY KEY, 
+        user_id INTEGER REFERENCES users(id),
+        url VARCHAR,
+        gif_comment VARCHAR,
+        title VARCHAR
+      )`;
 
   const articles = `CREATE TABLE IF NOT EXISTS
     articles(
-      id SERIAL PRIMARY KEY,
-      article VARCHAR(128) NOT NULL,
-      FOREIGN KEY (user_id) REFERENCES users (id),
+        id SERIAL PRIMARY KEY,
+        title VARCHAR NOT NULL,
+        body VARCHAR NOT NULL,
+        user_id INTEGER REFERENCES users(id)
+      )`;
 
+  // pool.query(users).then((res) => {
+  //   console.log(res);
+  //   pool.end();
+  // }).catch((err) => {
+  //   console.log(err);
+  //   pool.end();
+  // });
 
-    )`;
+  // pool.query(gifs).then((res) => {
+  //   console.log(res);
+  //   pool.end();
+  // }).catch((err) => {
+  //   console.log(err);
+  //   pool.end();
+  // });
 
-  pool.query(gifs).then((res) => {
+  // pool.query(comments).then((res) => {
+  //   console.log(res);
+  //   pool.end();
+  // }).catch((err) => {
+  //   console.log(err);
+  //   pool.end();
+  // });
+
+  pool.query(articles).then((res) => {
     console.log(res);
     pool.end();
   }).catch((err) => {

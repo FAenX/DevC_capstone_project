@@ -32,23 +32,6 @@ exports.createGif = (request, response) => {
         userId,
       ];
 
-      // async/await - check out a client
-
-      // pool.connect((err, client, done) => {
-      //   if (err) throw err;
-      //   client.query(query, values, (error, res) => {
-      //     done();
-      //     if (error) {
-      //       return response.status(400).send({
-      //         status: "error",
-      //         error: error.stack,
-      //       });
-      //     }
-
-      //     gif = res.rows[0];
-      //   });
-      // });
-
       (async () => {
         const client = await pool.connect();
         try {
