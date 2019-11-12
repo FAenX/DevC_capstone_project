@@ -107,7 +107,7 @@ exports.deleteGif = (request, response) => {
         error,
       });
     }
-    response.status(200).send({
+    response.status(204).send({
       status: "success",
       data: `User deleted with ID: ${id}`,
     });
