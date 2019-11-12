@@ -5,8 +5,10 @@
   "main": "server.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --require ./node_modules/@babel/register --timeout 50000",
+    "clean": "rm -rf build && mkdir build",
+    "build-babel": "babel -d ./build ./src -s",
+    "build": "npm run clean && npm run build-babel",
     "test-dev": "nodemon --exec ./node_modules/.bin/mocha --require ./node_modules/@babel/register --timeout 50000",
-    "build": "babel ./ --out-dir ./dist --source-maps",
     "start": "nodemon --exec babel-node server.js",
     "migratedb": "babel-node ./services/db.js createTables",
     "debug": "nodemon --exec babel-node --inspect  ./dist/server.js"
