@@ -36,4 +36,15 @@ describe("Article end point", () => {
       expect(response.body.data).to.have.property("title");
       expect(response.body.data).to.have.property("body");
     });
+
+  it("returns an article by id",
+    async () => {
+      const response = await chai.request(app)
+        .get(`/api/v1/articles/${testArticleId}`);
+
+      expect(response).to.have.status(200);
+      expect(response.body.status).to.equals("success");
+      expect(response.body.data[0]).to.have.property("title");
+      expect(response.body.data[0]).to.have.property("body");
+    });
 });
