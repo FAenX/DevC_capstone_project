@@ -24,6 +24,7 @@
     "url": "https://github.com/FAenX/DevC_capstone_project/issues"
   },
   "homepage": "https://github.com/FAenX/DevC_capstone_project#readme",
+  
   "engines": {
     "node": "12.10.0",
     "npm": "6.13.0"
