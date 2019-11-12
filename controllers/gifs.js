@@ -3,10 +3,10 @@ import { dataUri } from "../middleware/multerUpload";
 import { uploader } from "../cloudinaryConfig";
 
 const config = {
-  host: "devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com",
-  user: "postgres",
-  database: "DevC_capstone_project",
-  password: "6LppV5MJQ0sXh5M1mt2R",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
   port: 5432,
   max: 10,
   idleTimeoutMillis: 30000,
