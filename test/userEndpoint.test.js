@@ -135,7 +135,7 @@ describe("Users end point", () => {
         .delete(`/api/v1/users/${createdUserId}`)
         .set("Authorization", `Bearer ${token}`);
 
-      expect(response).to.have.status(200);
-      expect(response.body.status).to.equals("success");
+      expect(response).to.have.status(204);
+      // expect(response.body.status).to.equals("success");
     });
 });

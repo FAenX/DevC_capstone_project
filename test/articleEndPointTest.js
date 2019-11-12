@@ -33,8 +33,7 @@ describe("Article end point", () => {
 
       expect(response).to.have.status(200);
       expect(response.body.status).to.equals("success");
-      expect(response.body.data).to.have.property("title");
-      expect(response.body.data).to.have.property("body");
+      expect(response.body.data).to.be.an("array");
     });
 
   it("should returns an article by id",
@@ -61,5 +60,13 @@ describe("Article end point", () => {
       expect(response.body.status).to.equals("success");
       expect(response.body.data).to.have.property("title");
       expect(response.body.data).to.have.property("body");
+    });
+
+  it("should delete an article",
+    async () => {
+      const response = await chai.request(app)
+        .delete(`/api/v1/articles/${testArticleId}`);
+      expect(response).to.have.status(204);
+      // expect(response.body.status).to.equals("success");
     });
 });

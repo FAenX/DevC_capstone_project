@@ -35,7 +35,7 @@ exports.createArticle = (request, response) => {
   });
 };
 
-exports.getAllArticle = (request, response) => {
+exports.getAllArticles = (request, response) => {
   const query = "SELECT * FROM articles";
 
   pool.query(query, (err, result) => {
@@ -47,7 +47,7 @@ exports.getAllArticle = (request, response) => {
     } else {
       response.status(200).send({
         status: "success",
-        data: result.rows[0],
+        data: result.rows,
 
       });
     }
@@ -91,6 +91,29 @@ exports.editArticle = (request, response) => {
       response.status(200).send({
         status: "success",
         data: result.rows[0],
+
+      });
+    }
+  });
+};
+
+
+exports.deleteArticle = (request, response) => {
+  const query = "DELETE FROM articles WHERE id = $1";
+  const id = parseInt(request.params.id);
+
+  const values = [id];
+
+  pool.query(query, values, (err, result) => {
+    if (err) {
+      response.status(400).send({
+        status: "error",
+        err: err.stack,
+      });
+    } else {
+      response.status(204).send({
+        status: "success",
+        data: `Article deleted with ID: ${id}`,
 
       });
     }
