@@ -44,7 +44,7 @@ describe("Article end point", () => {
 
       expect(response).to.have.status(200);
       expect(response.body.status).to.equals("success");
-      expect(response.body.data[0]).to.have.property("title");
-      expect(response.body.data[0]).to.have.property("body");
+      expect(response.body.data).to.have.property("title");
+      expect(response.body.data).to.have.property("body");
     });
 });
