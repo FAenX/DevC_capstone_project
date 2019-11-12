@@ -14,6 +14,10 @@
     "debug": "nodemon --exec babel-node --inspect  ./dist/server.js",
     "heroku-postbuild": "npm install"
   },
+  "engines": {
+    "node": "12.10.0",
+    "npm": "6.13.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FAenX/DevC_capstone_project.git"
@@ -24,11 +28,6 @@
     "url": "https://github.com/FAenX/DevC_capstone_project/issues"
   },
   "homepage": "https://github.com/FAenX/DevC_capstone_project#readme",
-  
-  "engines": {
-    "node": "12.10.0",
-    "npm": "6.13.0"
-  },
 
   "dependencies": {
     "@babel/polyfill": "^7.7.0",
