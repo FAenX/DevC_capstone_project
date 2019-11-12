@@ -74,3 +74,25 @@ exports.getArticleById = (request, response) => {
     }
   });
 };
+
+exports.editArticle = (request, response) => {
+  const query = "UPDATE articles SET title = $1, body = $2 WHERE id = $3 RETURNING *";
+  const id = parseInt(request.params.id);
+  const { title, body } = request.body;
+  const values = [title, body, id];
+
+  pool.query(query, values, (err, result) => {
+    if (err) {
+      response.status(400).send({
+        status: "error",
+        err: err.stack,
+      });
+    } else {
+      response.status(200).send({
+        status: "success",
+        data: result.rows[0],
+
+      });
+    }
+  });
+};
