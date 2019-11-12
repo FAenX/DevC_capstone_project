@@ -31,7 +31,7 @@ describe("Gifs Endpoint ", () => {
       gifId = response.body.data.results.id;
     });
 
-  it("returns all gifs",
+  it("should returns all gifs",
     async () => {
       const response = await chai.request(app)
         .get("/api/v1/gifs")
@@ -42,7 +42,7 @@ describe("Gifs Endpoint ", () => {
       expect(response.body.data).to.be.an("array");
     });
 
-  it("returns a gif by ID",
+  it("should return a gif by ID",
 
     async () => {
       const response = await chai.request(app)
@@ -61,7 +61,7 @@ describe("Gifs Endpoint ", () => {
       expect(response.body.data[0]).to.have.property("gif_comment");
     });
 
-  it("modifies gif user comment",
+  it("should modify gif description",
     async () => {
       const response = await chai.request(app)
         .patch(`/api/v1/gifs/${gifId}`)
@@ -72,5 +72,14 @@ describe("Gifs Endpoint ", () => {
 
       expect(response).to.have.status(200);
       expect(response.body.status).to.equals("success");
+    });
+
+  it("should delete a gif",
+    async () => {
+      const response = await chai.request(app)
+        .delete(`/api/v1/gifs/${gifId}`)
+        .set("Authorization", `Bearer ${token}`);
+      expect(response).to.have.status(204);
+      // expect(response.body.status).to.equals("success");
     });
 });
