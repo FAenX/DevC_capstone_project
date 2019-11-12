@@ -5,9 +5,9 @@ const host = `http://${process.env.IP}:${process.env.PORT}`;
 const swaggerDefinition = {
 
   info: {
-    title: "Node Swagger API",
+    title: "DevC capstone project",
     version: "1.0.0",
-    description: "Demonstrating how to describe a RESTful API with Swagger",
+    description: "Teamwork",
   },
   host,
   basePath: "/",
@@ -21,9 +21,9 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ["./**/routes/*.js", "routes.js"],
+  apis: ["./**/routes/*.js", "routes.js", "./swagger.yaml"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
 
-exports = { swaggerDefinition, options, swaggerSpec };
+module.exports = { swaggerDefinition, options, swaggerSpec };

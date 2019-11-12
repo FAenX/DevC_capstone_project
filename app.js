@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 
 // app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/swagger.yaml", (req, res) => {
-  res.setHeader("Content-Type", "application/json");
+  // res.setHeader("Content-Type", "application/json");
   res.send(swaggerDef.swaggerSpec);
 });
 

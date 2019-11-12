@@ -8,8 +8,6 @@ const router = express.Router();
 
 // user routes
 router.post("/token", userControllers.token);
-
-
 router.post("/", auth.isStaff, userControllers.createUser);
 router.get("/", auth.verifyToken, userControllers.viewAllUsers);
 router.get("/:id", auth.verifyToken, userControllers.getUserById);
