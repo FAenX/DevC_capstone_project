@@ -3,10 +3,10 @@ import { dataUri } from "../middleware/multerUpload";
 import { uploader } from "../cloudinaryConfig";
 
 const config = {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
+  host: "devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com",
+  user: "postgres",
+  database: "DevC_capstone_project",
+  password: "6LppV5MJQ0sXh5M1mt2R",
   port: 5432,
   max: 10,
   idleTimeoutMillis: 30000,
@@ -31,23 +31,6 @@ exports.createGif = (request, response) => {
         image,
         userId,
       ];
-
-      // async/await - check out a client
-
-      // pool.connect((err, client, done) => {
-      //   if (err) throw err;
-      //   client.query(query, values, (error, res) => {
-      //     done();
-      //     if (error) {
-      //       return response.status(400).send({
-      //         status: "error",
-      //         error: error.stack,
-      //       });
-      //     }
-
-      //     gif = res.rows[0];
-      //   });
-      // });
 
       (async () => {
         const client = await pool.connect();

@@ -6,14 +6,15 @@ import jwt from "jsonwebtoken";
 
 
 const config = {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
+  host: "devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com",
+  user: "postgres",
+  database: "DevC_capstone_project",
+  password: "6LppV5MJQ0sXh5M1mt2R",
   port: 5432,
   max: 10,
   idleTimeoutMillis: 30000,
 };
+
 
 const pool = new pg.Pool(config);
 

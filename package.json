@@ -48,7 +48,8 @@
     "react-bootstrap": "^1.0.0-beta.14",
     "request": "^2.88.0",
     "swagger-ui-express": "^4.1.2",
-    "update": "^0.7.4"
+    "update": "^0.7.4",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -58,7 +59,6 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.9.0",
     "babel-register": "^6.26.0",
-    "dotenv": "^8.2.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.18.2",
