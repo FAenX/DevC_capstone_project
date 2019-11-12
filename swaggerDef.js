@@ -1,4 +1,3 @@
-import path from "path";
 import swaggerJSDoc from "swagger-jsdoc";
 
 const host = `http://${process.env.IP}:${process.env.PORT}`;
@@ -10,7 +9,7 @@ const swaggerDefinition = {
     version: "1.0.0",
     description: "Demonstrating how to describe a RESTful API with Swagger",
   },
-  host: "localhost:3001",
+  host,
   basePath: "/",
   swagger: "2.0",
   paths: { },
