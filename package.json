@@ -32,6 +32,7 @@
     "chai-http": "^4.3.0",
     "cloudinary": "^1.16.0",
     "datauri": "^2.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "formidable": "^1.2.1",
     "jasmine-es6": "^0.4.3",
@@ -46,10 +47,11 @@
     "pg": "^7.12.1",
     "re": "^0.1.4",
     "react-bootstrap": "^1.0.0-beta.14",
+    "redoc": "^2.0.0-rc.18",
     "request": "^2.88.0",
+    "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.1.2",
-    "update": "^0.7.4",
-    "dotenv": "^8.2.0"
+    "update": "^0.7.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -71,7 +73,6 @@
     "npm": "^6.13.0",
     "react": "^16.11.0",
     "regenerator-runtime": "^0.13.3",
-    "swagger-jsdoc": "^3.4.0",
     "webpack": "^4.41.2"
   }
 }
