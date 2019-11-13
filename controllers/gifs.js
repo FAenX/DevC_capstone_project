@@ -21,13 +21,12 @@ exports.createGif = (request, response) => {
       const image = result.url;
 
       const {
-        title, comment, userId,
+        title, userId,
       } = request.body;
 
-      const query = "INSERT INTO gifs(title, gif_comment, url, user_id) VALUES($1,$2,$3,$4) RETURNING *";
+      const query = "INSERT INTO gifs(title, url, user_id) VALUES($1,$2,$3) RETURNING *";
       const values = [
         title,
-        comment,
         image,
         userId,
       ];
@@ -38,10 +37,11 @@ exports.createGif = (request, response) => {
           const res = await client.query(query, values);
           return response.status(200).json({
             status: "success",
-            messge: "Your image has been uploded successfully to cloudinary",
             data: {
-              image,
-              results: res.rows[0],
+              imageUrl: image,
+              gifId: res.rows[0].id,
+              messge: "Your image has been uploded successfully to cloudinary",
+              createdOn: res.rows[0].created_on,
             },
           });
         } finally {
@@ -107,9 +107,11 @@ exports.deleteGif = (request, response) => {
         error,
       });
     }
-    response.status(204).send({
+    response.status(200).send({
       status: "success",
-      data: `User deleted with ID: ${id}`,
+      data: {
+        message: "Gif deleted successfully",
+      },
     });
   });
 };

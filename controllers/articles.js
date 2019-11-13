@@ -14,10 +14,10 @@ const config = {
 const pool = new pg.Pool(config);
 
 exports.createArticle = (request, response) => {
-  const { title, body, userId } = request.body;
+  const { title, article, userId } = request.body;
 
   const query = "INSERT INTO articles(title, body, user_id) VALUES($1, $2, $3) RETURNING *";
-  const values = [title, body, userId];
+  const values = [title, article, userId];
 
   pool.query(query, values, (err, result) => {
     if (err) {
@@ -28,7 +28,12 @@ exports.createArticle = (request, response) => {
     } else {
       response.status(202).send({
         status: "success",
-        data: result.rows[0],
+        data: {
+          message: "Article successfully posted",
+          articleId: result.rows[0].id,
+          createdOn: result.rows[0].created_on,
+          title: result.rows[0].title,
+        },
 
       });
     }
@@ -76,10 +81,10 @@ exports.getArticleById = (request, response) => {
 };
 
 exports.editArticle = (request, response) => {
-  const query = "UPDATE articles SET title = $1, body = $2 WHERE id = $3 RETURNING *";
+  const query = "UPDATE articles SET title = $1, article = $2 WHERE id = $3 RETURNING *";
   const id = parseInt(request.params.id);
-  const { title, body } = request.body;
-  const values = [title, body, id];
+  const { title, article } = request.body;
+  const values = [title, article, id];
 
   pool.query(query, values, (err, result) => {
     if (err) {
@@ -90,7 +95,11 @@ exports.editArticle = (request, response) => {
     } else {
       response.status(200).send({
         status: "success",
-        data: result.rows[0],
+        data: {
+          message: "Article successfully updated",
+          title: result.rows[0].title,
+          article: result.rows[0].article,
+        },
 
       });
     }
@@ -111,9 +120,11 @@ exports.deleteArticle = (request, response) => {
         err: err.stack,
       });
     } else {
-      response.status(204).send({
+      response.status(200).send({
         status: "success",
-        data: `Article deleted with ID: ${id}`,
+        data: {
+          message: "Article deleted successfully",
+        },
 
       });
     }

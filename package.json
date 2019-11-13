@@ -29,10 +29,8 @@
     "url": "https://github.com/FAenX/DevC_capstone_project/issues"
   },
   "homepage": "https://github.com/FAenX/DevC_capstone_project#readme",
-
   "dependencies": {
     "@babel/polyfill": "^7.7.0",
-    "aws-sdk": "^2.570.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.3.1",
@@ -49,16 +47,13 @@
     "mocha": "^6.2.2",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
-    "multer-s3": "^2.9.0",
     "nodemon": "^1.19.4",
     "npm-run-all": "^4.1.5",
     "pg": "^7.12.1",
     "re": "^0.1.4",
-    "react-bootstrap": "^1.0.0-beta.14",
     "redoc": "^2.0.0-rc.18",
     "request": "^2.88.0",
     "swagger-jsdoc": "^3.4.0",
-    "swagger-ui-express": "^4.1.2",
     "update": "^0.7.4"
   },
   "devDependencies": {

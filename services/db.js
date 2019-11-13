@@ -23,7 +23,10 @@ exports.createTables = () => {
         id SERIAL PRIMARY KEY,
         first_name VARCHAR(128) NOT NULL,
         last_name VARCHAR(128) NOT NULL,
-        username VARCHAR(128) NOT NULL,
+        gender VARCHAR(128) NOT NULL,
+        job_role VARCHAR(128) NOT NULL,
+        department VARCHAR(128) NOT NULL,
+        address VARCHAR(128) NOT NULL,
         email VARCHAR(128) NOT NULL UNIQUE,
         password VARCHAR(128) NOT NULL,
         is_staff BOOLEAN
@@ -43,7 +46,7 @@ exports.createTables = () => {
         id SERIAL PRIMARY KEY, 
         user_id INTEGER REFERENCES users(id),
         url VARCHAR,
-        gif_comment VARCHAR,
+        created_on DATETIME,
         title VARCHAR
       )`;
 
@@ -51,33 +54,34 @@ exports.createTables = () => {
     articles(
         id SERIAL PRIMARY KEY,
         title VARCHAR NOT NULL,
-        body VARCHAR NOT NULL,
+        article VARCHAR NOT NULL,
+        created_on DATETIME,
         user_id INTEGER REFERENCES users(id)
       )`;
 
-  // pool.query(users).then((res) => {
-  //   console.log(res);
-  //   pool.end();
-  // }).catch((err) => {
-  //   console.log(err);
-  //   pool.end();
-  // });
+  pool.query(users).then((res) => {
+    console.log(res);
+    pool.end();
+  }).catch((err) => {
+    console.log(err);
+    pool.end();
+  });
 
-  // pool.query(gifs).then((res) => {
-  //   console.log(res);
-  //   pool.end();
-  // }).catch((err) => {
-  //   console.log(err);
-  //   pool.end();
-  // });
+  pool.query(gifs).then((res) => {
+    console.log(res);
+    pool.end();
+  }).catch((err) => {
+    console.log(err);
+    pool.end();
+  });
 
-  // pool.query(comments).then((res) => {
-  //   console.log(res);
-  //   pool.end();
-  // }).catch((err) => {
-  //   console.log(err);
-  //   pool.end();
-  // });
+  pool.query(comments).then((res) => {
+    console.log(res);
+    pool.end();
+  }).catch((err) => {
+    console.log(err);
+    pool.end();
+  });
 
   pool.query(articles).then((res) => {
     console.log(res);

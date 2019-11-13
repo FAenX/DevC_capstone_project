@@ -27,7 +27,7 @@ exports.token = (request, response) => {
     if (error) {
       throw (error);
     }
-    const { email, password } = results.rows[0];
+    const { email, password, id } = results.rows[0];
 
     // compared saved hashed password to supplied password
     bcrypt.compare(userPassword, password).then(
@@ -48,7 +48,7 @@ exports.token = (request, response) => {
         response.status(200).send({
           status: "success",
           data: {
-            userId: email,
+            userId: id,
             token,
           },
         });
@@ -67,7 +67,10 @@ exports.createUser = (request, response) => {
   const data = {
     firstName: request.body.firstName,
     lastName: request.body.lastName,
-    userName: request.body.userName,
+    gender: request.body.gender,
+    jobRole: request.body.jobRole,
+    department: request.body.department,
+    address: request.body.address,
     email: request.body.email,
     password: request.body.password,
     isStaff: request.body.isStaff,
@@ -92,12 +95,15 @@ exports.createUser = (request, response) => {
 
 
   pool.connect((error, client, done) => {
-    const query = "INSERT INTO users(first_name, last_name, username, email, password, is_staff) VALUES($1,$2,$3,$4,$5,$6) RETURNING *";
+    const query = "INSERT INTO users(first_name, last_name, gender, email, job_role, department, address, password, is_staff) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *";
     const values = [
       data.firstName,
       data.lastName,
-      data.userName,
+      data.gender,
       data.email,
+      data.jobRole,
+      data.department,
+      data.address,
       hashedPassword,
       data.isStaff,
     ];
@@ -111,7 +117,11 @@ exports.createUser = (request, response) => {
       } else {
         response.status(202).send({
           status: "success",
-          data: result.rows[0],
+          data: {
+            message: "User account successfully created",
+            token: "",
+            userId: result.rows[0].id,
+          },
 
         });
       }
