@@ -3,7 +3,6 @@ import gifControllers from "../controllers/gifs";
 
 import auth from "../middleware/auth";
 import { multerUploads } from "../middleware/multerUpload";
-// import uploadToS3 from "../middleware/multer-config";
 
 const router = express.Router();
 
