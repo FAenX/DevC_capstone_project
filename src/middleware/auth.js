@@ -10,15 +10,15 @@ exports.verifyToken = (req, res, next) => {
     if (req.body.userId && req.body.userId !== userId) {
       res.status(401).send({
         status: "error",
-        error: "access denied",
+        data: "access denied",
       });
     } else {
       next();
     }
   } catch (error) {
-    res.status(401).send({
+    res.status(400).send({
       status: "error",
-      error: "access denied",
+      data: "Bad request",
     });
   }
 };
@@ -29,15 +29,15 @@ exports.isStaff = (req, res, next) => {
     if (Staff === "false") {
       res.status(401).send({
         status: "error",
-        error: "access denied",
+        data: "access denied, you should be admin to create user",
       });
     } else {
       next();
     }
-  } catch (erro) {
+  } catch (error) {
     res.status(400).send({
       status: "error",
-      error: "invalid request",
+      data: "You have not includes any authentication",
     });
   }
 };

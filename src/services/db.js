@@ -36,9 +36,9 @@ exports.createTables = () => {
       comments(
         id SERIAL PRIMARY KEY,
         comment VARCHAR(128) NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES users (id) NOT NULL,
-        FOREIGN KEY (gif_id) REFERENCES gifs (id) NULL,
-        FOREIGN KEY (article_id) REFERENCES articles (id)  NULL    
+        user_id INTEGER REFERENCES users(id),
+        article_id INTEGER REFERENCES articles(id),
+        gif_id INTEGER REFERENCES gifs(id)   
 
       )`;
 
@@ -46,8 +46,8 @@ exports.createTables = () => {
         id SERIAL PRIMARY KEY, 
         user_id INTEGER REFERENCES users(id),
         url VARCHAR,
-        created_on DATETIME,
-        title VARCHAR
+        created_on VARCHAR NOT NULL,
+        title VARCHAR NOT NULL
       )`;
 
   const articles = `CREATE TABLE IF NOT EXISTS
@@ -55,7 +55,7 @@ exports.createTables = () => {
         id SERIAL PRIMARY KEY,
         title VARCHAR NOT NULL,
         article VARCHAR NOT NULL,
-        created_on DATETIME,
+        created_on VARCHAR NOT NULL,
         user_id INTEGER REFERENCES users(id)
       )`;
 

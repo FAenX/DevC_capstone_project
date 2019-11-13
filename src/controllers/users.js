@@ -49,6 +49,7 @@ exports.token = (request, response) => {
           status: "success",
           data: {
             userId: id,
+            email,
             token,
           },
         });
@@ -88,11 +89,10 @@ exports.createUser = (request, response) => {
     (error) => {
       response.status(500).send({
         status: "error",
-        error,
+        data: error,
       });
     },
   );
-
 
   pool.connect((error, client, done) => {
     const query = "INSERT INTO users(first_name, last_name, gender, email, job_role, department, address, password, is_staff) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *";
@@ -108,11 +108,10 @@ exports.createUser = (request, response) => {
       data.isStaff,
     ];
     client.query(query, values, (err, result) => {
-      done();
       if (err) {
         response.status(400).send({
           status: "error",
-          err: err.stack,
+          data: err.stack,
         });
       } else {
         response.status(202).send({
@@ -161,22 +160,22 @@ exports.getUserById = (request, response) => {
     if (error) {
       response.status(400).send({
         status: "error",
-        error,
+        data: error.stack,
       });
     }
     response.status(200).send({
       status: "success",
-      data: results.rows,
+      data: results.rows[0],
     });
   });
 };
 
 exports.modifyUser = (request, response) => {
   const id = parseInt(request.params.id);
-  const { username, email } = request.body;
+  const { firstName, lastName } = request.body;
 
   pool.query(
-    "UPDATE users SET username = $1, email = $2 WHERE id = $3", [username, email, id],
+    "UPDATE users SET first_name = $1, last_name = $2 WHERE id = $3", [firstName, lastName, id],
     (error) => {
       if (error) {
         response.status(400).send({
@@ -202,7 +201,7 @@ exports.deleteUser = (request, response) => {
         error,
       });
     }
-    response.status(204).send({
+    response.status(200).send({
       status: "success",
       data: `User deleted with ID: ${id}`,
     });

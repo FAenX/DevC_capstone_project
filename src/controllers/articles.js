@@ -14,16 +14,18 @@ const config = {
 const pool = new pg.Pool(config);
 
 exports.createArticle = (request, response) => {
-  const { title, article, userId } = request.body;
+  const {
+    title, article, fkUserId, createdOn,
+  } = request.body;
 
-  const query = "INSERT INTO articles(title, body, user_id) VALUES($1, $2, $3) RETURNING *";
-  const values = [title, article, userId];
+  const query = "INSERT INTO articles(title, article, user_id, created_on) VALUES($1, $2, $3, $4) RETURNING *";
+  const values = [title, article, fkUserId, createdOn];
 
   pool.query(query, values, (err, result) => {
     if (err) {
       response.status(400).send({
         status: "error",
-        err: err.stack,
+        data: err.stack,
       });
     } else {
       response.status(202).send({
@@ -47,7 +49,7 @@ exports.getAllArticles = (request, response) => {
     if (err) {
       response.status(400).send({
         status: "error",
-        err: err.stack,
+        data: err.stack,
       });
     } else {
       response.status(200).send({
@@ -68,7 +70,7 @@ exports.getArticleById = (request, response) => {
     if (err) {
       response.status(400).send({
         status: "error",
-        err: err.stack,
+        data: err.stack,
       });
     } else {
       response.status(200).send({
@@ -90,7 +92,7 @@ exports.editArticle = (request, response) => {
     if (err) {
       response.status(400).send({
         status: "error",
-        err: err.stack,
+        body: err.stack,
       });
     } else {
       response.status(200).send({

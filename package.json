@@ -9,8 +9,8 @@
     "build-babel": "babel -d ./build src -s",
     "build": "npm run clean && npm run build-babel",
     "test-dev": "nodemon --exec ./node_modules/.bin/mocha --require ./node_modules/@babel/register --timeout 50000",
-    "start": "nodemon --exec babel-node server.js",
-    "migratedb": "babel-node ./services/db.js createTables",
+    "start": "nodemon --exec babel-node src/server.js",
+    "migratedb": "babel-node src/services/db.js createTables",
     "debug": "nodemon --exec babel-node --inspect  ./dist/server.js",
     "heroku-postbuild": "npm install"
   },
@@ -30,6 +30,8 @@
   },
   "homepage": "https://github.com/FAenX/DevC_capstone_project#readme",
   "dependencies": {
+    "@babel/polyfill": "^7.7.0",
+    "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "busybox": "^2019.8.21",
@@ -56,7 +58,6 @@
     "update": "^0.7.4"
   },
   "devDependencies": {
-    "@babel/polyfill": "^7.7.0",
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.2",
     "@babel/node": "^7.7.0",
