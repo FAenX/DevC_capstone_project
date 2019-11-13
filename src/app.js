@@ -32,7 +32,7 @@ app.use("/swagger.yaml", (req, res) => {
 });
 
 app.use("/docs", (req, res) => {
-  res.sendFile(path.join(__dirname, "redoc.html"));
+  res.sendFile(path.join(__dirname, "../redoc.html"));
 });
 
 

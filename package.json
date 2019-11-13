@@ -40,6 +40,7 @@
     "cloudinary": "^1.17.0",
     "datauri": "^2.0.0",
     "dotenv": "^8.2.0",
+    "express-swagger-generator": "^1.1.15",
     "express": "^4.17.1",
     "formidable": "^1.2.1",
     "heroku": "^7.35.0",
@@ -72,6 +73,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "express-swagger-generator": "^1.1.15",
     "install": "^0.13.0",
     "npm": "^6.13.0",
     "regenerator-runtime": "^0.13.3"
