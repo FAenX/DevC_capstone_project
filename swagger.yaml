@@ -66,6 +66,34 @@ paths:
                   status: string
                   data:
 
+  /gifs/:id:
+    delete:
+      summary: Delete an gif
+      description: Employees can delete their gifs
+      responses:
+        '200':    # status code
+          description: Gif
+          content:
+            application/json:
+              schema: 
+                type: object
+                items: 
+                  status: string
+                  data:
+    get:
+      summary: GET an gif
+      description: Employees can view a specific gif post
+      responses:
+        '200':    # status code
+          description: Gif
+          content:
+            application/json:
+              schema: 
+                type: object
+                items: 
+                  status: string
+                  data:
+
   /articles:
     post:
       summary: Create an article
@@ -122,30 +150,4 @@ paths:
                 items: 
                   status: string
                   data:
-  /gifs/:id:
-    delete:
-      summary: Delete an gif
-      description: Employees can delete their gifs
-      responses:
-        '200':    # status code
-          description: Gif
-          content:
-            application/json:
-              schema: 
-                type: object
-                items: 
-                  status: string
-                  data:
-  get:
-      summary: GET an gif
-      description: Employees can view a specific gif post
-      responses:
-        '200':    # status code
-          description: Gif
-          content:
-            application/json:
-              schema: 
-                type: object
-                items: 
-                  status: string
-                  data:
+  
