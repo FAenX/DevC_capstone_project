@@ -1,13 +1,27 @@
 import jwt from "jsonwebtoken";
+import pg from "pg";
+
+const config = {
+  host: "devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com",
+  user: "postgres",
+  database: "DevC_capstone_project",
+  password: "6LppV5MJQ0sXh5M1mt2R",
+  port: 5432,
+  max: 10,
+  idleTimeoutMillis: 30000,
+};
+
+
+const pool = new pg.Pool(config);
 
 
 exports.verifyToken = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-    const { userId } = decodedToken;
+    const { email } = decodedToken;
 
-    if (req.body.userId && req.body.userId !== userId) {
+    if (req.body.email && req.body.userId !== email) {
       res.status(401).send({
         status: "error",
         data: "access denied",
@@ -25,19 +39,33 @@ exports.verifyToken = (req, res, next) => {
 
 exports.isStaff = (req, res, next) => {
   try {
-    const Staff = req.headers.authorization.split(" ")[1];
-    if (Staff === "false") {
-      res.status(401).send({
-        status: "error",
-        data: "access denied, you should be admin to create user",
-      });
-    } else {
-      next();
-    }
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const { email } = decodedToken;
+
+
+    const query = "SELECT * FROM users WHERE email = $1";
+    const values = [email];
+    pool.query(query, values, (error, result) => {
+      if (error) {
+        res.status(400).send({
+          status: "error",
+          error,
+        });
+      }
+      if (req.body.email && req.body.userId !== email) {
+        res.status(401).send({
+          status: "error",
+          data: "access denied",
+        });
+      } else {
+        next();
+      }
+    });
   } catch (error) {
     res.status(400).send({
       status: "error",
-      data: "You have not includes any authentication",
+      data: "Bad request",
     });
   }
 };
