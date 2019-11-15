@@ -21,7 +21,7 @@ exports.verifyToken = (req, res, next) => {
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const { email } = decodedToken;
 
-    if (req.body.email && req.body.userId !== email) {
+    if (req.body.email && req.body.email !== email) {
       res.status(401).send({
         status: "error",
         data: "access denied",
@@ -43,20 +43,28 @@ exports.isStaff = (req, res, next) => {
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const { email } = decodedToken;
 
-
     const query = "SELECT * FROM users WHERE email = $1";
     const values = [email];
+
     pool.query(query, values, (error, result) => {
       if (error) {
         res.status(400).send({
           status: "error",
-          error,
+          data: error.stack,
         });
-      }
-      if (req.body.email && req.body.userId !== email) {
+      } else if (result.rows < 1) {
         res.status(401).send({
           status: "error",
-          data: "access denied",
+          data: {
+            message: "User does not exist",
+          },
+        });
+      } else if (result.rows[0].is_staff !== true) {
+        res.status(401).send({
+          status: "error",
+          data: {
+            message: "Access denied, you should be admin to create user",
+          },
         });
       } else {
         next();

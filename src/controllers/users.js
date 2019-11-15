@@ -26,40 +26,48 @@ exports.token = (request, response) => {
   pool.query("SELECT * FROM users WHERE email = $1", [userEmail], (error, results) => {
     if (error) {
       throw (error);
-    }
-    const { email, password, id } = results.rows[0];
-
-    // compared saved hashed password to supplied password
-    bcrypt.compare(userPassword, password).then(
-      (valid) => {
-        if (!valid) {
-          response.status(401).send({
-            status: "error",
-            error: "Incorrect password",
-          });
-        }
-        const token = jwt.sign(
-          { userId: email },
-          "RANDOM_TOKEN_SECRET",
-          { expiresIn: "24h" },
-        );
-
-        // respond with jwt token
-        response.status(200).send({
-          status: "success",
-          data: {
-            userId: id,
-            email,
-            token,
-          },
-        });
-      },
-    ).catch(
-      (err) => response.status(500).send({
+    } else if (results.rows < 1) {
+      response.status(401).send({
         status: "error",
-        err,
-      }),
-    );
+        data: {
+          message: "User does not exist",
+        },
+      });
+    } else {
+      const { email, password, id } = results.rows[0];
+
+      // compared saved hashed password to supplied password
+      bcrypt.compare(userPassword, password).then(
+        (valid) => {
+          if (!valid) {
+            response.status(401).send({
+              status: "error",
+              error: "Incorrect password",
+            });
+          }
+          const token = jwt.sign(
+            { email },
+            "RANDOM_TOKEN_SECRET",
+            { expiresIn: "24h" },
+          );
+
+          // respond with jwt token
+          response.status(200).send({
+            status: "success",
+            data: {
+              userId: id,
+              email,
+              token,
+            },
+          });
+        },
+      ).catch(
+        (err) => response.status(500).send({
+          status: "error",
+          err,
+        }),
+      );
+    }
   });
 };
 
@@ -77,12 +85,39 @@ exports.createUser = (request, response) => {
     isStaff: request.body.isStaff,
   };
 
-  let hashedPassword;
-
   // hash password before saving
   bcrypt.hash(request.body.password, 10).then(
     (hash) => {
-      hashedPassword = hash;
+      const query = "INSERT INTO users(first_name, last_name, gender, email, job_role, department, address, password, is_staff) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *";
+      const values = [
+        data.firstName,
+        data.lastName,
+        data.gender,
+        data.email,
+        data.jobRole,
+        data.department,
+        data.address,
+        hash,
+        data.isStaff,
+      ];
+      pool.query(query, values, (err, result) => {
+        if (err) {
+          response.status(400).send({
+            status: "error",
+            data: err.stack,
+          });
+        } else {
+          response.status(202).send({
+            status: "success",
+            data: {
+              message: "User account successfully created",
+              token: "",
+              userId: result.rows[0].id,
+            },
+
+          });
+        }
+      });
     },
 
   ).catch(
@@ -93,39 +128,6 @@ exports.createUser = (request, response) => {
       });
     },
   );
-
-  pool.connect((error, client, done) => {
-    const query = "INSERT INTO users(first_name, last_name, gender, email, job_role, department, address, password, is_staff) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *";
-    const values = [
-      data.firstName,
-      data.lastName,
-      data.gender,
-      data.email,
-      data.jobRole,
-      data.department,
-      data.address,
-      hashedPassword,
-      data.isStaff,
-    ];
-    client.query(query, values, (err, result) => {
-      if (err) {
-        response.status(400).send({
-          status: "error",
-          data: err.stack,
-        });
-      } else {
-        response.status(202).send({
-          status: "success",
-          data: {
-            message: "User account successfully created",
-            token: "",
-            userId: result.rows[0].id,
-          },
-
-        });
-      }
-    });
-  });
 };
 
 exports.viewAllUsers = (request, response) => {
