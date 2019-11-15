@@ -40,7 +40,7 @@ describe("Users end point", () => {
 
       expect(response).to.have.status(200);
       expect(response.body.data).to.have.property("userId");
-      expect(response.body.data.token).is.a("string");
+      expect(response.body.data).to.have.property("token");
       token = response.body.data.token;
     });
 
@@ -100,7 +100,7 @@ describe("Users end point", () => {
     });
 
   
-  it("retrieves a single users",
+  it("Should return current user",
     async () => {
       const response = await chai.request(app)
         .get(`/api/v1/auth/${createdUserId}`)
@@ -116,7 +116,7 @@ describe("Users end point", () => {
       expect(response.body.data).to.have.property("is_staff");
     });
 
-  it("modifies a user",
+  it("Should edit current user",
     async () => {
       const response = await chai.request(app)
         .patch(`/api/v1/auth/${createdUserId}/`)
@@ -131,7 +131,7 @@ describe("Users end point", () => {
     });
 
 
-  it("deletes a user",
+  it("Should delete current user",
     async () => {
       const response = await chai.request(app)
         .delete(`/api/v1/auth/${createdUserId}`)
