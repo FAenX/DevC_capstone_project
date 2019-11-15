@@ -26,6 +26,8 @@ paths:
                   type: string
                 isStaff:
                   type: boolean
+                address:
+                  type: string
 
       responses:
         '200':
