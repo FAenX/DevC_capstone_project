@@ -1,24 +1,338 @@
-openapi: 3.0.0
-info:
-  title: DevC Capstone Projectc
-  description: "Description"
-  version: 1.0.0
-servers:
-  - url: http://api.example.com/v1
-    description: "description"
-  - url: http://staging-api.example.com
-    description:  "description"
 paths:
-  /users:
+  /auth/create-user:
+    post:
+      summary: Create user account.
+      description: Admin can create an employee user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                gender:
+                  type: string
+                department:
+                  type: string
+                jobRole:
+                  type: string
+                isStaff:
+                  type: boolean
+
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example: {
+                      message: "User account successfully created",
+                      token: "token",
+                      userId: 4
+                    }
+        '401':
+          description: You should be admin.
+        '400':
+          description: db constraint failed.
+        default:
+          description: Unexpected error
+
+  /auth/signin:
+    post:
+      summary: Login a user
+      description: Admin/Employees can sign in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example: {
+                      token: "token",
+                      userId: 4
+                    }
+        '401':
+          description: user not authenticated.
+        default:
+          description: Unexpected error
+
+  /gifs:
+    post:
+      summary: Create a gif.
+      description: 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gif:
+                  type: image
+                title:
+                  type: string
+
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example: {
+                      message: "GIF image successfully posted",
+                      createdON: datetime,
+                      title: string,
+                      imageUrl: string
+                    }
+        '401':
+          description: unauthorized.
+        '400':
+          description: db constraint failed.
+        default:
+          description: Unexpected error
+
+  /gifs/:id:
+    delete:
+      summary: Delete an gif
+      description: Employees can delete their gifs
+      parameters:
+        - name: gifId
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example: {
+                      message: "GIF successfully deleted",
+                    }
+        '401':
+          description: unauthorized.
+        '400':
+          description: db constraint failed.
+        default:
+          description: Unexpected error
     get:
-      summary: Returns a list of users.
-      description: Optional extended description in CommonMark or HTML.
+      summary: GET an gif
+      description: Employees can view a specific gif post
       responses:
         '200':    # status code
-          description: A JSON array of user names
+          description: Gif
           content:
             application/json:
               schema: 
-                type: array
+                type: object
                 items: 
+                  status: string
+                  data:
+
+  /articles:
+    post:
+      summary: Create an article
+      description: 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
                   type: string
+                article:
+                  type: string
+                
+
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example: {
+                      message: "Article successfully created",
+                      title: "title",
+                      article: article
+                    }
+        '401':
+          description: unauthorized.
+        '400':
+          description: db constraint failed.
+        default:
+          description: Unexpected error
+
+  /articles/:id:
+    patch:
+      summary: Edit an article
+      description: 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                article:
+                  type: string
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example: {
+                      message: "Article successfully edited",
+                      title: "title",
+                      article: article
+                    }
+        '401':
+          description: unauthorized.
+        '400':
+          description: db constraint failed.
+        default:
+          description: Unexpected error
+
+  
+    delete:
+      summary: Delete an article
+      description: Employees can delete their articles
+      parameters:
+        - name: articleId
+          in: path
+          required: true
+          description: 
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+
+      responses:
+        '200':
+          description: A user object.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example: {
+                      message: "Article successfully deleted",
+                    }
+        '401':
+          description: unauthorized.
+        '400':
+          description: db constraint failed.
+        default:
+          description: Unexpected error
+    get:
+      summary: GET an article
+      description: Employees can view a specific article
+      parameters:
+        - name: articleId
+          in: path
+          required: true
+          description: 
+          schema:
+            type : integer
+            format: int64
+            minimum: 1
+
+      responses:
+        '200':
+          description: 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    example: {
+                      title: "title",
+                      article: "article",
+                      userId: 4
+                    }
+        '400':
+          description: db constraint failed.
+        default:
+          description: Unexpected error
+  

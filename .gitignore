@@ -1,3 +1,5 @@
+build/
+
 # Logs
 aws_keys/
 .env

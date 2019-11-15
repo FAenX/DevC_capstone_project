@@ -32,7 +32,7 @@ app.use("/swagger.yaml", (req, res) => {
 });
 
 app.use("/docs", (req, res) => {
-  res.sendFile(path.join(__dirname, "redoc.html"));
+  res.sendFile(path.join(__dirname, "../redoc.html"));
 });
 
 
@@ -42,7 +42,7 @@ app.use("*", cloudinaryConfig);
 app.use(json());
 
 
-app.use("/api/v1/users/", userRoutes);
+app.use("/api/v1/auth/", userRoutes);
 app.use("/api/v1/gifs/", gifRoutes);
 app.use("/api/v1/articles/", articleRoutes);
 

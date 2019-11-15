@@ -21,15 +21,15 @@ exports.createGif = (request, response) => {
       const image = result.url;
 
       const {
-        title, comment, userId,
+        title, userId, createdOn,
       } = request.body;
 
-      const query = "INSERT INTO gifs(title, gif_comment, url, user_id) VALUES($1,$2,$3,$4) RETURNING *";
+      const query = "INSERT INTO gifs(title, url, user_id, created_on) VALUES($1,$2,$3, $4) RETURNING *";
       const values = [
         title,
-        comment,
         image,
         userId,
+        createdOn,
       ];
 
       (async () => {
@@ -38,10 +38,11 @@ exports.createGif = (request, response) => {
           const res = await client.query(query, values);
           return response.status(200).json({
             status: "success",
-            messge: "Your image has been uploded successfully to cloudinary",
             data: {
-              image,
-              results: res.rows[0],
+              imageUrl: res.rows[0].url,
+              gifId: res.rows[0].id,
+              message: "Your image has been uploded successfully to cloudinary",
+              createdOn: res.rows[0].created_on,
             },
           });
         } finally {
@@ -92,7 +93,7 @@ exports.getGif = (request, response) => {
     }
     response.status(200).send({
       status: "success",
-      data: results.rows,
+      data: results.rows[0],
     });
   });
 };
@@ -107,27 +108,11 @@ exports.deleteGif = (request, response) => {
         error,
       });
     }
-    response.status(204).send({
-      status: "success",
-      data: `User deleted with ID: ${id}`,
-    });
-  });
-};
-
-exports.patchGif = (request, response) => {
-  const id = parseInt(request.params.id);
-  const { comment } = request.body;
-
-  pool.query("UPDATE gifs SET gif_comment = $1 WHERE id = $2", [comment, id], (error) => {
-    if (error) {
-      response.status(400).send({
-        status: "error",
-        error,
-      });
-    }
     response.status(200).send({
       status: "success",
-      data: `new comment: ${comment}`,
+      data: {
+        message: "Gif deleted successfully",
+      },
     });
   });
 };

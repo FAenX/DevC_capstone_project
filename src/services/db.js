@@ -23,7 +23,10 @@ exports.createTables = () => {
         id SERIAL PRIMARY KEY,
         first_name VARCHAR(128) NOT NULL,
         last_name VARCHAR(128) NOT NULL,
-        username VARCHAR(128) NOT NULL,
+        gender VARCHAR(128) NOT NULL,
+        job_role VARCHAR(128) NOT NULL,
+        department VARCHAR(128) NOT NULL,
+        address VARCHAR(128) NOT NULL,
         email VARCHAR(128) NOT NULL UNIQUE,
         password VARCHAR(128) NOT NULL,
         is_staff BOOLEAN
@@ -33,9 +36,9 @@ exports.createTables = () => {
       comments(
         id SERIAL PRIMARY KEY,
         comment VARCHAR(128) NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES users (id) NOT NULL,
-        FOREIGN KEY (gif_id) REFERENCES gifs (id) NULL,
-        FOREIGN KEY (article_id) REFERENCES articles (id)  NULL    
+        user_id INTEGER REFERENCES users(id),
+        article_id INTEGER REFERENCES articles(id),
+        gif_id INTEGER REFERENCES gifs(id)   
 
       )`;
 
@@ -43,41 +46,42 @@ exports.createTables = () => {
         id SERIAL PRIMARY KEY, 
         user_id INTEGER REFERENCES users(id),
         url VARCHAR,
-        gif_comment VARCHAR,
-        title VARCHAR
+        created_on VARCHAR NOT NULL,
+        title VARCHAR NOT NULL
       )`;
 
   const articles = `CREATE TABLE IF NOT EXISTS
     articles(
         id SERIAL PRIMARY KEY,
         title VARCHAR NOT NULL,
-        body VARCHAR NOT NULL,
+        article VARCHAR NOT NULL,
+        created_on VARCHAR NOT NULL,
         user_id INTEGER REFERENCES users(id)
       )`;
 
-  // pool.query(users).then((res) => {
-  //   console.log(res);
-  //   pool.end();
-  // }).catch((err) => {
-  //   console.log(err);
-  //   pool.end();
-  // });
+  pool.query(users).then((res) => {
+    console.log(res);
+    pool.end();
+  }).catch((err) => {
+    console.log(err);
+    pool.end();
+  });
 
-  // pool.query(gifs).then((res) => {
-  //   console.log(res);
-  //   pool.end();
-  // }).catch((err) => {
-  //   console.log(err);
-  //   pool.end();
-  // });
+  pool.query(gifs).then((res) => {
+    console.log(res);
+    pool.end();
+  }).catch((err) => {
+    console.log(err);
+    pool.end();
+  });
 
-  // pool.query(comments).then((res) => {
-  //   console.log(res);
-  //   pool.end();
-  // }).catch((err) => {
-  //   console.log(err);
-  //   pool.end();
-  // });
+  pool.query(comments).then((res) => {
+    console.log(res);
+    pool.end();
+  }).catch((err) => {
+    console.log(err);
+    pool.end();
+  });
 
   pool.query(articles).then((res) => {
     console.log(res);
