@@ -40,10 +40,11 @@ exports.verifyToken = (req, res, next) => {
 
 exports.isStaff = (req, res, next) => {
   try {
-    const adminEmail = req.query.email;
-    const adminPassword = req.query.password;
+    const base64Credentials = req.headers.authorization.split(" ")[1];
+    const credentials = Buffer.from(base64Credentials, "base64").toString("ascii");
+    const [username, password] = credentials.split(":");
 
-    if (adminEmail === "test@test.com" && adminPassword === "test") {
+    if (username === "test@test.com" && password === "test") {
       next();
     } else {
       res.status(401).send({
