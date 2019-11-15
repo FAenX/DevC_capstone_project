@@ -114,7 +114,6 @@ exports.createUser = (request, response) => {
           "RANDOM_TOKEN_SECRET",
           { expiresIn: "24h" },
         );
-
         response.status(202).send({
           status: "success",
           data: {

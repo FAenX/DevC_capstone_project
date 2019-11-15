@@ -50,6 +50,8 @@ describe("Users end point", () => {
         .post("/api/v1/auth/create-user")
         .set("Authorization", `Bearer ${token}`)
         .send(normalUser);
+
+      console.log(response.body.data);
       expect(response).to.have.status(202);
       expect(response.body.status).to.equals("success");
       expect(response.body.data.message).to.equals("User account successfully created");
@@ -57,7 +59,7 @@ describe("Users end point", () => {
       createdUserId = response.body.data.userId;
     });
 
-    it("Should fetch all users",
+  it("Should fetch all users",
     async () => {
       const response = await chai.request(app)
         .get("/api/v1/auth")
@@ -67,11 +69,9 @@ describe("Users end point", () => {
       expect(response.body.status).to.equals("success");
       expect(response.body.data).to.be.an("array");
     });
-
 });
 
 describe("Users end point", () => {
-
   it("Should get a test normal user token",
     async () => {
       const response = await chai.request(app)
@@ -86,7 +86,7 @@ describe("Users end point", () => {
       expect(response.body.data.token).is.a("string");
       token = response.body.data.token;
     });
-  
+
   it("refuses to create user if request sent by non staff",
     async () => {
       const response = await chai.request(app)
@@ -99,7 +99,7 @@ describe("Users end point", () => {
       expect(response.body.data.message).to.equals("Access denied, you should be admin to create user");
     });
 
-  
+
   it("Should return current user",
     async () => {
       const response = await chai.request(app)
