@@ -107,22 +107,22 @@ exports.createUser = (request, response) => {
             status: "error",
             data: err.stack,
           });
+        } else {
+          const token = jwt.sign(
+            { email: result.rows[0].email },
+            "RANDOM_TOKEN_SECRET",
+            { expiresIn: "24h" },
+          );
+          response.status(202).send({
+            status: "success",
+            data: {
+              message: "User account successfully created",
+              token,
+              userId: result.rows[0].id,
+            },
+
+          });
         }
-
-        const token = jwt.sign(
-          { email: result.rows[0].email },
-          "RANDOM_TOKEN_SECRET",
-          { expiresIn: "24h" },
-        );
-        response.status(202).send({
-          status: "success",
-          data: {
-            message: "User account successfully created",
-            token,
-            userId: result.rows[0].id,
-          },
-
-        });
       });
     },
 
