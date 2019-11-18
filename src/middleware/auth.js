@@ -40,18 +40,37 @@ exports.verifyToken = (req, res, next) => {
 
 exports.isStaff = (req, res, next) => {
   try {
-    const base64Credentials = req.headers.authorization.split(" ")[1];
-    const credentials = Buffer.from(base64Credentials, "base64").toString("ascii");
-    const [username, password] = credentials.split(":");
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const { email } = decodedToken;
 
-    if (username === "test@test.com" && password === "test") {
-      next();
-    } else {
-      res.status(401).send({
-        status: "error",
-        data: "incorrect credentials",
-      });
-    }
+    const query = "SELECT * FROM users WHERE email = $1";
+    const values = [email];
+
+    pool.query(query, values, (error, result) => {
+      if (error) {
+        res.status(400).send({
+          status: "error",
+          data: error.stack,
+        });
+      } else if (result.rows < 1) {
+        res.status(401).send({
+          status: "error",
+          data: {
+            message: "User does not exist",
+          },
+        });
+      } else if (result.rows[0].is_staff !== true) {
+        res.status(401).send({
+          status: "error",
+          data: {
+            message: "Access denied, you should be admin to create user",
+          },
+        });
+      } else {
+        next();
+      }
+    });
   } catch (error) {
     res.status(400).send({
       status: "error",
