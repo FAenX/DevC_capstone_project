@@ -51,7 +51,6 @@ describe("Users end point", () => {
         .set("Authorization", `Bearer ${token}`)
         .send(normalUser);
 
-      console.log(response.body.data);
       expect(response).to.have.status(202);
       expect(response.body.status).to.equals("success");
       expect(response.body.data.message).to.equals("User account successfully created");
