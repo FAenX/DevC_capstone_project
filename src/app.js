@@ -42,8 +42,8 @@ app.use("*", cloudinaryConfig);
 app.use(json());
 
 
-app.use("/Api/v1/auth/", userRoutes);
-app.use("/Api/v1/gifs/", gifRoutes);
-app.use("/Api/v1/articles/", articleRoutes);
+app.use("/api/v1/", userRoutes);
+app.use("/api/v1/gifs/", gifRoutes);
+app.use("/api/v1/articles/", articleRoutes);
 
 export default app;
