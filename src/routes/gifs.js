@@ -2,7 +2,7 @@ import express from "express";
 import gifControllers from "../controllers/gifs";
 
 import auth from "../middleware/auth";
-import { multerUploads } from "../middleware/multerUpload";
+import multerUploads from "../middleware/multerUpload";
 
 const router = express.Router();
 

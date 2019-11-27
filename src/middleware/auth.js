@@ -1,28 +1,13 @@
 import jwt from "jsonwebtoken";
-import pg from "pg";
-import bcrypt from "bcrypt";
-
-const config = {
-  host: "devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com",
-  user: "postgres",
-  database: "DevC_capstone_project",
-  password: "6LppV5MJQ0sXh5M1mt2R",
-  port: 5432,
-  max: 10,
-  idleTimeoutMillis: 30000,
-};
-
-
-const pool = new pg.Pool(config);
 
 
 exports.verifyToken = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-    const { email } = decodedToken;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const { cleanEmail } = decodedToken;
 
-    if (req.body.email && req.body.email !== email) {
+    if (req.body.email && req.body.email !== cleanEmail) {
       res.status(401).send({
         status: "error",
         data: "access denied",
@@ -38,43 +23,29 @@ exports.verifyToken = (req, res, next) => {
   }
 };
 
-exports.isStaff = (req, res, next) => {
+exports.isStaff = (req, response, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-    const { email } = decodedToken;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const { isstaff } = decodedToken;
 
-    const query = "SELECT * FROM users WHERE email = $1";
-    const values = [email];
-
-    pool.query(query, values, (error, result) => {
-      if (error) {
-        res.status(400).send({
-          status: "error",
-          data: error.stack,
-        });
-      } else if (result.rows < 1) {
-        res.status(401).send({
-          status: "error",
-          data: {
-            message: "User does not exist",
-          },
-        });
-      } else if (result.rows[0].is_staff !== true) {
-        res.status(401).send({
-          status: "error",
-          data: {
-            message: "Access denied, you should be admin to create user",
-          },
-        });
-      } else {
-        next();
-      }
-    });
-  } catch (error) {
-    res.status(400).send({
+    if (!isstaff) {
+      response.status(401).json({
+        status: "error",
+        data: "You must be admin",
+      });
+    } else if (isstaff) {
+      next();
+    } else {
+      response.status(400).json({
+        status: "error",
+        data: "An error occured",
+      });
+    }
+  } catch (err) {
+    response.status(400).json({
       status: "error",
-      data: "Bad request",
+      data: err.stack,
     });
   }
 };

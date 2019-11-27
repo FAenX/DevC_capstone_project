@@ -1,22 +1,26 @@
 import path from "path";
 import express from "express";
-import { urlencoded, json } from "body-parser";
+import bodyParser from "body-parser";
 
 import dotenv from "dotenv";
-import { cloudinaryConfig } from "./cloudinaryConfig";
 
 
-import swaggerDef from "./swaggerDef";
+
+import swaggerDef from "./config/swaggerDef";
 
 
 import userRoutes from "./routes/users";
 import gifRoutes from "./routes/gifs";
 import articleRoutes from "./routes/articles";
+import feedRoutes from "./routes/feed";
 
 
 dotenv.config();
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -36,14 +40,9 @@ app.use("/docs", (req, res) => {
 });
 
 
-app.use(urlencoded({ extended: false }));
-app.use("*", cloudinaryConfig);
-
-app.use(json());
-
-
 app.use("/api/v1/auth/", userRoutes);
 app.use("/api/v1/gifs/", gifRoutes);
 app.use("/api/v1/articles/", articleRoutes);
+app.use("/api/v1/feed/", feedRoutes);
 
 export default app;
