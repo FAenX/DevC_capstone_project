@@ -1,15 +1,56 @@
+import path from "path";
+import Datauri from "datauri";
+import uuidv1 from "uuid/v1";
 import { saveGif, findAllGifs } from "../models/gifs";
+import uploader from "../config/cloudinaryConfig";
+
+const dUri = new Datauri();
+const dataUri = (req) => dUri.format(path.extname(req.file.originalname).toString(), req.file.buffer);
 
 exports.createGif = (request, response) => {
-  const {
-    title, userId, createdOn,
-  } = request.body;
+  // console.log(request);
+  if (request.file) {
+    const file = dataUri(request).content;
 
-  console.log(request.body);
-  response.status(200).send({
-    status: "success",
-    data: [],
-  });
+    uploader.upload(file).then((result) => {
+      const gifUrl = result.url;
+
+      const {
+        title, userId, createdOn,
+      } = request.body;
+
+      const id = uuidv1();
+
+      const values = [id, title, gifUrl, createdOn, userId];
+      saveGif(values).then((data) => {
+        console.log(data);
+        response.status(200).send({
+          status: "success",
+          data: {
+            title,
+            userId,
+            createdOn,
+            gifUrl,
+          },
+        });
+      }).catch((error) => {
+        response.status(400).send({
+          status: "error",
+          data: {
+            error,
+          },
+        });
+      });
+    }).catch((error) => {
+      response.status(500).send({
+        status: "error",
+        data: {
+          error,
+        },
+      });
+    });
+  }
+  console.log("file not found");
 };
 
 exports.getAllGifs = (request, response) => {

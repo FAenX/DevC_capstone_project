@@ -3,7 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import dotenv from "dotenv";
-
+import cors from "cors";
 
 
 import swaggerDef from "./config/swaggerDef";
@@ -18,6 +18,7 @@ import feedRoutes from "./routes/feed";
 dotenv.config();
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
@@ -29,9 +30,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/swagger.yaml", (req, res) => {
-  // res.setHeader("Content-Type", "application/json");
   res.send(swaggerDef.swaggerSpec);
 });
 
