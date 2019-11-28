@@ -4,17 +4,30 @@ import {findAllArticles} from "../models/articles"
 
 
 exports.getFeed = (request, response) => {
-	console.log(findAllGifs)
-	const gifs = findAllGifs().then((feed)=> {
-		console.log(feed)
-		return feed 
-	}).catch(error => error );
+	const gifs = findAllGifs().then((gifs)=> {
+		findAllArticles().then((articles)=>{
+			response.status(200).json({
+				status: "success",
+				data:  {gifs, articles}
+			})
+		}).catch(error => {
+			response.status(200).json({
+				status: "error",
+				data:  error
+			})
+		})
+	}).catch(error => {
+		response.status(200).json({
+				status: "error",
+				data:  error
+			})
+	});
+	
 	const articles = findAllArticles().then(articles => articles).catch(error=>error);
 
-	response.status(200).json({
-		status: "success",
-		data:  {gifs, articles}
-		})
+	console.log(gifs.then((gifs)=> gifs ).catch(error => error ))
+
+	
 
 };
 
