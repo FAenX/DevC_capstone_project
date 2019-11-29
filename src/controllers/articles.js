@@ -1,84 +1,56 @@
-import pg from "pg";
+import uuidv1 from "uuid/v1";
+import { saveArticle, findAllArticles, findOneArticle } from "../models/articles";
 
-const config = {
-  host: "devc-capstone-project.ce9guunrhjao.us-east-2.rds.amazonaws.com",
-  user: "postgres",
-  database: "DevC_capstone_project",
-  password: "6LppV5MJQ0sXh5M1mt2R",
-  port: 5432,
-  max: 10,
-  idleTimeoutMillis: 30000,
-};
-
-
-const pool = new pg.Pool(config);
 
 exports.createArticle = (request, response) => {
   const {
     title, article, fkUserId, createdOn,
   } = request.body;
+  const id = uuidv1();
+  saveArticle([id, title, article, createdOn, fkUserId]).then((data) => {
+    response.status(200).send({
+      status: "success",
+      data,
+    });
+  }).catch((error) => {
+    response.status(400).send({
+      status: "error",
+      data: error,
 
-  const query = "INSERT INTO articles(title, article, user_id, created_on) VALUES($1, $2, $3, $4) RETURNING *";
-  const values = [title, article, fkUserId, createdOn];
-
-  pool.query(query, values, (err, result) => {
-    if (err) {
-      response.status(400).send({
-        status: "error",
-        data: err.stack,
-      });
-    } else {
-      response.status(202).send({
-        status: "success",
-        data: {
-          message: "Article successfully posted",
-          articleId: result.rows[0].id,
-          createdOn: result.rows[0].created_on,
-          title: result.rows[0].title,
-        },
-
-      });
-    }
+    });
   });
 };
 
 exports.getAllArticles = (request, response) => {
-  const query = "SELECT * FROM articles";
+  findAllArticles().then((articles) => {
+    response.status(200).send({
+      status: "success",
+      data: articles,
+    });
+  }).catch((error) => {
+    response.status(400).send({
+      status: "error",
+      data: error,
 
-  pool.query(query, (err, result) => {
-    if (err) {
-      response.status(400).send({
-        status: "error",
-        data: err.stack,
-      });
-    } else {
-      response.status(200).send({
-        status: "success",
-        data: result.rows,
-
-      });
-    }
+    });
   });
 };
 
 exports.getArticleById = (request, response) => {
-  const query = "SELECT * FROM articles WHERE id = $1";
-  const id = parseInt(request.params.id);
-  const values = [id];
+  const { id } = request.params;
 
-  pool.query(query, values, (err, result) => {
-    if (err) {
-      response.status(400).send({
-        status: "error",
-        data: err.stack,
-      });
-    } else {
-      response.status(200).send({
-        status: "success",
-        data: result.rows[0],
+  findOneArticle([id]).then((article) => {
+    console.log(article);
+    response.status(200).send({
+      status: "success",
+      data: article,
+    });
+  }).catch((error) => {
+    response.status(400).send({
+      status: "error",
+      data: error,
 
-      });
-    }
+    });
   });
 };
 
@@ -87,25 +59,6 @@ exports.editArticle = (request, response) => {
   const id = parseInt(request.params.id);
   const { title, article } = request.body;
   const values = [title, article, id];
-
-  pool.query(query, values, (err, result) => {
-    if (err) {
-      response.status(400).send({
-        status: "error",
-        body: err.stack,
-      });
-    } else {
-      response.status(200).send({
-        status: "success",
-        data: {
-          message: "Article successfully updated",
-          title: result.rows[0].title,
-          article: result.rows[0].article,
-        },
-
-      });
-    }
-  });
 };
 
 
@@ -114,21 +67,4 @@ exports.deleteArticle = (request, response) => {
   const id = parseInt(request.params.id);
 
   const values = [id];
-
-  pool.query(query, values, (err, result) => {
-    if (err) {
-      response.status(400).send({
-        status: "error",
-        err: err.stack,
-      });
-    } else {
-      response.status(200).send({
-        status: "success",
-        data: {
-          message: "Article deleted successfully",
-        },
-
-      });
-    }
-  });
 };

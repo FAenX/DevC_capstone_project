@@ -58,7 +58,7 @@ exports.getAllGifs = (request, response) => {
     console.log(gifs);
     response.status(200).send({
       status: "success",
-      data: [],
+      data: gifs,
     });
   }).catch((error) => {
     response.status(400).send({

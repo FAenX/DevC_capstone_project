@@ -6,8 +6,8 @@ import auth from "../middleware/auth";
 const router = express.Router();
 
 router.post("/", auth.verifyToken, articleControllers.createArticle);
-router.get("/", articleControllers.getAllArticles);
-router.get("/:id", articleControllers.getArticleById);
+router.get("/", auth.verifyToken, articleControllers.getAllArticles);
+router.get("/:id", auth.verifyToken, articleControllers.getArticleById);
 router.patch("/:id", auth.verifyToken, articleControllers.editArticle);
 router.delete("/:id", auth.verifyToken, articleControllers.deleteArticle);
 

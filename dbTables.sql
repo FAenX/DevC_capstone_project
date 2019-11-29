@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS articles (
-    ID INTEGER PRIMARY KEY,
+    ID VARCHAR PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    article text NULL,
+    article text NOT NULL,
     createdOn VARCHAR NOT NULL,
     authorId VARCHAR REFERENCES users(ID) ON DELETE CASCADE
 );
