@@ -4,9 +4,7 @@ import utils from "./utils";
 
 
 exports.login = (request, response) => {
-  // get email and paddword from body
   const { email, password } = request.body;
-  // check if payload is present
   if (!email || !password || email === "" || password === "") {
     response.status(400).json({
       status: "error",
@@ -16,16 +14,13 @@ exports.login = (request, response) => {
     const cleanEmail = email.trim();
     dbActions.findOne([cleanEmail])
       .then((user) => {
-        console.log(user);
         if (!user) {
           response.status(400).json({
             status: "error",
             data: "user does not exist",
           });
         } else {
-          //
-
-
+          
           const { id, hashedpassword, isstaff } = user;
           const passwordIsValid = utils.comparePassword(password.trim(), hashedpassword);
           if (!passwordIsValid) {
@@ -39,7 +34,6 @@ exports.login = (request, response) => {
               isstaff,
             };
             const token = utils.JWTToken(userObj);
-            // respond with jwt token
             response.status(200).send({
               status: "success",
               data: {
@@ -141,23 +135,6 @@ exports.signUp = (request, response) => {
 //           data: result.rows,
 //         });
 //       }
-//     });
-//   });
-// };
-
-// exports.getUserById = (request, response) => {
-//   const id = parseInt(request.params.id);
-
-//   pool.query("SELECT * FROM users WHERE id = $1", [id], (error, results) => {
-//     if (error) {
-//       response.status(400).send({
-//         status: "error",
-//         data: error.stack,
-//       });
-//     }
-//     response.status(200).send({
-//       status: "success",
-//       data: results.rows[0],
 //     });
 //   });
 // };

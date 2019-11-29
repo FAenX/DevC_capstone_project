@@ -10,8 +10,7 @@ const router = express.Router();
 router.post("/create-user", auth.isStaff, userControllers.signUp);
 router.post("/signin", userControllers.login);
 // router.get("/", auth.isStaff, userControllers.viewAllUsers);
-// router.get("/:id", auth.verifyToken, userControllers.getUserById);
-// router.patch("/:id", auth.verifyToken, userControllers.modifyUser);
+// router.patch("/:id", userControllers.modifyUser);
 // router.delete("/:id", auth.verifyToken, userControllers.deleteUser);
 
 

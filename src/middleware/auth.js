@@ -10,7 +10,7 @@ exports.verifyToken = (req, res, next) => {
     if (req.body.email && req.body.email !== cleanEmail) {
       res.status(401).send({
         status: "error",
-        data: "access denied",
+        data: "token failed to validate",
       });
     } else {
       next();
