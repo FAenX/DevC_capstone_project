@@ -55,16 +55,14 @@ exports.getArticleById = (request, response) => {
 };
 
 exports.editArticle = (request, response) => {
-  const query = "UPDATE articles SET title = $1, article = $2 WHERE id = $3 RETURNING *";
-  const id = parseInt(request.params.id);
   const { title, article } = request.body;
   const values = [title, article, id];
+  console.log(values);
 };
 
 
 exports.deleteArticle = (request, response) => {
-  const query = "DELETE FROM articles WHERE id = $1";
   const id = parseInt(request.params.id);
-
   const values = [id];
+  console.log(id);
 };
