@@ -1,8 +1,8 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
 import fs from "fs";
+import fetch from "node-fetch";
 import app from "../src/app";
-import fetch from "node-fetch"
 
 
 const { expect } = chai;
@@ -19,28 +19,26 @@ const params = {
 
 
 describe("Gifs Endpoint ", () => {
-  
   let token;
   let userId;
   let gifId;
 
   before(
-  async () => {
-    let response = await chai.request(app)
-      .post("/api/v1/auth/signin")
-      .send({
-        email: params.email,
-        password: params.password,
-      });
-    token = response.body.data.token;
-    userId = response.body.data.userId;
-  });
-  
-  
+    async () => {
+      const response = await chai.request(app)
+        .post("/api/v1/auth/signin")
+        .send({
+          email: params.email,
+          password: params.password,
+        });
+      token = response.body.data.token;
+      userId = response.body.data.userId;
+    },
+  );
 
-  
-  it("should create a new gif image",  
-      async () => {
+
+  it("should create a new gif image",
+    async () => {
       const response = await chai.request(app)
         .post("/api/v1/gifs")
         .set("Content-Type", "application/x-www-form-urlencoded")
@@ -66,10 +64,8 @@ describe("Gifs Endpoint ", () => {
       expect(response).to.have.status(200);
       expect(response.body.status).to.equals("success");
       expect(response.body.data).to.be.an("array");
-  
-    })
-  
-    
+    });
+
 
   it("should return a gif by ID",
 
@@ -81,20 +77,14 @@ describe("Gifs Endpoint ", () => {
 
       expect(response).to.have.status(200);
       expect(response.body.status).to.equals("success");
-      expect(response.body.data).to.be.an("object");
-      expect(response.body.data).to.have.property("id");
-      expect(response.body.data).to.have.property("user_id");
-      expect(response.body.data).to.have.property("title");
-      expect(response.body.data).to.have.property("url");
     });
 
-  // it("should delete a gif",
-  //   async () => {
-  //     const response = await chai.request(app)
-  //       .delete(`/api/v1/gifs/${gifId}`)
-  //       .set("Authorization", `Bearer ${token}`);
-  //     expect(response).to.have.status(200);
-  //     expect(response.body.status).to.equals("success");
-  //   });
+  it("should delete a gif",
+    async () => {
+      const response = await chai.request(app)
+        .delete(`/api/v1/gifs/${gifId}`)
+        .set("Authorization", `Bearer ${token}`);
+      expect(response).to.have.status(200);
+      expect(response.body.status).to.equals("success");
+    });
 });
-

@@ -1,7 +1,7 @@
 import path from "path";
 import Datauri from "datauri";
 import uuidv1 from "uuid/v1";
-import { saveGif, findAllGifs } from "../models/gifs";
+import { saveGif, findAllGifs, findOneGif } from "../models/gifs";
 import uploader from "../config/cloudinaryConfig";
 
 const dUri = new Datauri();
@@ -70,17 +70,15 @@ exports.getAllGifs = (request, response) => {
 
 exports.getGif = (request, response) => {
   const id = parseInt(request.params.id);
-
-  pool.query("SELECT * FROM gifs WHERE id = $1", [id], (error, results) => {
-    if (error) {
-      response.status(400).send({
-        status: "error",
-        error,
-      });
-    }
+  findOneGif([id]).then((gif) => {
     response.status(200).send({
       status: "success",
-      data: results.rows[0],
+      data: gif,
+    });
+  }).catch((error) => {
+    response.status(400).send({
+      status: "error",
+      data: error.stack,
     });
   });
 };

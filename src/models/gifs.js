@@ -1,12 +1,10 @@
 import query from "./dbConnector";
 
 exports.findOneGif = (value) => {
-  const queryText = "SELECT * FROM gifs WHERE ID=$1";
+  const queryText = "SELECT * FROM gifs WHERE id=$1";
   const row = query(queryText, value)
     .then((res) => res.rows[0])
-    .catch((err) => {
-      throw err;
-    });
+    .catch((err) => err);
   return row;
 };
 
