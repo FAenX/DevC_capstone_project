@@ -77,6 +77,7 @@ describe("Article end point", () => {
         .patch(`/api/v1/articles/${testArticleId}`)
         .set("Authorization", `Bearer ${token}`)
         .send({
+          userId,
           id: testArticleId,
           title: "new title",
           article: "a new body",
@@ -92,7 +93,10 @@ describe("Article end point", () => {
     async () => {
       const response = await chai.request(app)
         .delete(`/api/v1/articles/${testArticleId}`)
-        .set("Authorization", `Bearer ${token}`);
+        .set("Authorization", `Bearer ${token}`)
+        .send({
+          userId,
+        });
 
       expect(response).to.have.status(200);
       expect(response.body.status).to.equals("success");

@@ -1,6 +1,6 @@
 import uuidv1 from "uuid/v1";
 import {
-  saveArticle, findAllArticles, findOneArticle, editArticle,
+  saveArticle, findAllArticles, findOneArticle, editArticle, deleteArticle,
 } from "../models/articles";
 
 
@@ -73,18 +73,24 @@ exports.editArticle = (request, response) => {
 
 
 exports.deleteArticle = (request, response) => {
-  const id = parseInt(request.params.id);
+  const { id } = request.params;
+  const { userId, isStaff } = request.body;
   const values = [id];
-  findAllArticles().then((articles) => {
-    response.status(200).send({
-      status: "success",
-      data: articles,
-    });
-  }).catch((error) => {
-    response.status(400).send({
-      status: "error",
-      data: error,
+  findOneArticle([id]).then((comm) => {
+    const { authorid } = comm;
+    if (userId === authorid || isStaff) {
+      deleteArticle(values).then((articles) => {
+        response.status(200).send({
+          status: "success",
+          data: articles,
+        });
+      }).catch((error) => {
+        response.status(400).send({
+          status: "error",
+          data: error,
 
-    });
+        });
+      });
+    }
   });
 };

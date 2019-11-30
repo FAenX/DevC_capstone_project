@@ -13,6 +13,7 @@ import userRoutes from "./routes/users";
 import gifRoutes from "./routes/gifs";
 import articleRoutes from "./routes/articles";
 import feedRoutes from "./routes/feed";
+import commentRoutes from "./routes/comments";
 
 
 dotenv.config();
@@ -43,5 +44,6 @@ app.use("/api/v1/auth/", userRoutes);
 app.use("/api/v1/gifs/", gifRoutes);
 app.use("/api/v1/articles/", articleRoutes);
 app.use("/api/v1/feed/", feedRoutes);
+app.use("/api/v1/comments/", commentRoutes);
 
 export default app;
