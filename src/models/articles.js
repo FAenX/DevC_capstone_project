@@ -21,10 +21,19 @@ exports.saveArticle = (values) => {
       articles (id, title, article, createdOn, authorId)
       VALUES ($1, $2, $3, $4, $5) RETURNING *`;
   const row = query(queryText, values)
-    .then((res) => res.rows)
+    .then((res) => res.rows[0])
     .catch((error) => error);
   return row;
 };
+
+exports.editArticle = (values) => {
+  const queryText = "UPDATE articles SET title = $1, article = $2 WHERE id = $3 RETURNING *";
+  const rows = query(queryText, values)
+    .then((res) => res.rows[0])
+    .catch((err) => err);
+  return rows;
+};
+
 
 exports.deleteArticle = (value) => {
   const queryText = "DELETE FROM gifs WHERE ID=$1 RETURNING *";

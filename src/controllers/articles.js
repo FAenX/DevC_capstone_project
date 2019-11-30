@@ -1,5 +1,7 @@
 import uuidv1 from "uuid/v1";
-import { saveArticle, findAllArticles, findOneArticle } from "../models/articles";
+import {
+  saveArticle, findAllArticles, findOneArticle, editArticle,
+} from "../models/articles";
 
 
 exports.createArticle = (request, response) => {
@@ -38,9 +40,7 @@ exports.getAllArticles = (request, response) => {
 
 exports.getArticleById = (request, response) => {
   const { id } = request.params;
-
   findOneArticle([id]).then((article) => {
-    console.log(article);
     response.status(200).send({
       status: "success",
       data: article,
@@ -55,14 +55,36 @@ exports.getArticleById = (request, response) => {
 };
 
 exports.editArticle = (request, response) => {
-  const { title, article } = request.body;
+  const { title, article, id } = request.body;
   const values = [title, article, id];
-  console.log(values);
+  editArticle(values).then((res) => {
+    response.status(200).send({
+      status: "success",
+      data: res,
+    });
+  }).catch((error) => {
+    response.status(400).send({
+      status: "error",
+      data: error,
+
+    });
+  });
 };
 
 
 exports.deleteArticle = (request, response) => {
   const id = parseInt(request.params.id);
   const values = [id];
-  console.log(id);
+  findAllArticles().then((articles) => {
+    response.status(200).send({
+      status: "success",
+      data: articles,
+    });
+  }).catch((error) => {
+    response.status(400).send({
+      status: "error",
+      data: error,
+
+    });
+  });
 };

@@ -25,7 +25,7 @@ exports.saveGif = (values) => {
   return query(queryText, values);
 };
 
-exports.deleteGif = (value) => {
+exports.deleteSingleGif = (value) => {
   const queryText = "DELETE FROM gifs WHERE ID=$1 RETURNING *";
   const row = query(queryText, value)
     .then((res) => res.rows[0])

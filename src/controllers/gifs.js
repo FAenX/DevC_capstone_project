@@ -1,7 +1,9 @@
 import path from "path";
 import Datauri from "datauri";
 import uuidv1 from "uuid/v1";
-import { saveGif, findAllGifs, findOneGif } from "../models/gifs";
+import {
+  saveGif, findAllGifs, findOneGif, deleteSingleGif,
+} from "../models/gifs";
 import uploader from "../config/cloudinaryConfig";
 
 const dUri = new Datauri();
@@ -69,7 +71,7 @@ exports.getAllGifs = (request, response) => {
 
 
 exports.getGif = (request, response) => {
-  const id = parseInt(request.params.id);
+  const { id } = request.params;
   findOneGif([id]).then((gif) => {
     response.status(200).send({
       status: "success",
@@ -84,20 +86,16 @@ exports.getGif = (request, response) => {
 };
 
 exports.deleteGif = (request, response) => {
-  const id = parseInt(request.params.id);
-
-  pool.query("DELETE FROM gifs WHERE id = $1", [id], (error) => {
-    if (error) {
-      response.status(400).send({
-        status: "error",
-        error,
-      });
-    }
+  const { id } = request.params;
+  deleteSingleGif([id]).then((gif) => {
     response.status(200).send({
       status: "success",
-      data: {
-        message: "Gif deleted successfully",
-      },
+      data: gif,
+    });
+  }).catch((error) => {
+    response.status(400).send({
+      status: "error",
+      data: error.stack,
     });
   });
 };
