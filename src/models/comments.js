@@ -1,42 +1,42 @@
 import query from "./dbConnector";
 
-exports.findOneArticle = (value) => {
-  const queryText = "SELECT * FROM articles WHERE id=$1";
+exports.findOneComment = (value) => {
+  const queryText = "SELECT * FROM comments WHERE id=$1";
   const row = query(queryText, value)
     .then((res) => res.rows[0])
     .catch((err) => err);
   return row;
 };
 
-exports.findAllArticles = () => {
-  const queryText = "SELECT * FROM articles";
+exports.findAllComments = () => {
+  const queryText = "SELECT * FROM comments";
   const rows = query(queryText, [])
     .then((res) => res.rows)
     .catch((err) => err);
   return rows;
 };
 
-exports.saveArticle = (values) => {
+exports.saveComment = (values) => {
   const queryText = `INSERT INTO
-      articles (id, title, article, createdOn, authorId)
-      VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+      comments (id, comment, createdOn, authorId, articleid, gifid)
+      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
   const row = query(queryText, values)
     .then((res) => res.rows[0])
     .catch((error) => error);
   return row;
 };
 
-exports.editArticle = (values) => {
-  const queryText = "UPDATE articles SET title = $1, article = $2 WHERE id = $3 RETURNING *";
+exports.editComment = (values) => {
+  const queryText = "UPDATE comments SET comment = $1 WHERE id = $2 RETURNING *";
   const rows = query(queryText, values)
-    .then((res) => res.rows[0])
+    .then((res) => res.rows)
     .catch((err) => err);
   return rows;
 };
 
 
-exports.deleteArticle = (value) => {
-  const queryText = "DELETE FROM articles WHERE ID=$1 RETURNING *";
+exports.deleteComment = (value) => {
+  const queryText = "DELETE FROM comments WHERE ID=$1 RETURNING *";
   const row = query(queryText, value)
     .then((res) => res.rows[0])
     .catch((err) => {

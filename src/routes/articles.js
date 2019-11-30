@@ -1,14 +1,16 @@
 import express from "express";
-import articleControllers from "../controllers/articles";
-import auth from "../middleware/auth";
+import {
+  getAllArticles, createArticle, getArticleById, editArticle, deleteArticle,
+} from "../controllers/articles";
+import { verifyToken } from "../middleware/auth";
 
 
 const router = express.Router();
 
-router.post("/", auth.verifyToken, articleControllers.createArticle);
-router.get("/", auth.verifyToken, articleControllers.getAllArticles);
-router.get("/:id", auth.verifyToken, articleControllers.getArticleById);
-router.patch("/:id", auth.verifyToken, articleControllers.editArticle);
-router.delete("/:id", auth.verifyToken, articleControllers.deleteArticle);
+router.post("/", verifyToken, createArticle);
+router.get("/", verifyToken, getAllArticles);
+router.get("/:id", verifyToken, getArticleById);
+router.patch("/:id", verifyToken, editArticle);
+router.delete("/:id", verifyToken, deleteArticle);
 
 export default router;

@@ -20,7 +20,6 @@ exports.login = (request, response) => {
             data: "user does not exist",
           });
         } else {
-          
           const { id, hashedpassword, isstaff } = user;
           const passwordIsValid = utils.comparePassword(password.trim(), hashedpassword);
           if (!passwordIsValid) {
@@ -30,7 +29,7 @@ exports.login = (request, response) => {
             });
           } else {
             const userObj = {
-              cleanEmail,
+              id,
               isstaff,
             };
             const token = utils.JWTToken(userObj);

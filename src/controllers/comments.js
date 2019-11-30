@@ -1,15 +1,15 @@
 import uuidv1 from "uuid/v1";
 import {
-  saveArticle, findAllArticles, findOneArticle, editArticle, deleteArticle,
-} from "../models/articles";
+  saveComment, findAllComments, findOneComment, editComment, deleteComment,
+} from "../models/comments";
 
 
-exports.createArticle = (request, response) => {
+exports.createComment = (request, response) => {
   const {
-    title, article, fkUserId, createdOn,
+    comment, userId, createdOn, testArticleId, gifId,
   } = request.body;
   const id = uuidv1();
-  saveArticle([id, title, article, createdOn, fkUserId]).then((data) => {
+  saveComment([id, comment, createdOn, userId, testArticleId, gifId]).then((data) => {
     response.status(200).send({
       status: "success",
       data,
@@ -23,11 +23,11 @@ exports.createArticle = (request, response) => {
   });
 };
 
-exports.getAllArticles = (request, response) => {
-  findAllArticles().then((articles) => {
+exports.getAllComments = (request, response) => {
+  findAllComments().then((comments) => {
     response.status(200).send({
       status: "success",
-      data: articles,
+      data: comments,
     });
   }).catch((error) => {
     response.status(400).send({
@@ -38,12 +38,12 @@ exports.getAllArticles = (request, response) => {
   });
 };
 
-exports.getArticleById = (request, response) => {
+exports.getCommentById = (request, response) => {
   const { id } = request.params;
-  findOneArticle([id]).then((article) => {
+  findOneComment([id]).then((comment) => {
     response.status(200).send({
       status: "success",
-      data: article,
+      data: comment,
     });
   }).catch((error) => {
     response.status(400).send({
@@ -54,10 +54,10 @@ exports.getArticleById = (request, response) => {
   });
 };
 
-exports.editArticle = (request, response) => {
-  const { title, article, id } = request.body;
-  const values = [title, article, id];
-  editArticle(values).then((res) => {
+exports.editComment = (request, response) => {
+  const { comment, id } = request.body;
+  const values = [comment, id];
+  editComment(values).then((res) => {
     response.status(200).send({
       status: "success",
       data: res,
@@ -72,13 +72,13 @@ exports.editArticle = (request, response) => {
 };
 
 
-exports.deleteArticle = (request, response) => {
+exports.deleteComment = (request, response) => {
   const { id } = request.params;
   const values = [id];
-  deleteArticle(values).then((articles) => {
+  deleteComment(values).then((comments) => {
     response.status(200).send({
       status: "success",
-      data: articles,
+      data: comments,
     });
   }).catch((error) => {
     response.status(400).send({

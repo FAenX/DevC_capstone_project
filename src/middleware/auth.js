@@ -5,9 +5,9 @@ exports.verifyToken = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    const { cleanEmail } = decodedToken;
+    const { id } = decodedToken;
 
-    if (req.body.email && req.body.email !== cleanEmail) {
+    if (req.body.userId && req.body.userId !== id) {
       res.status(401).send({
         status: "error",
         data: "token failed to validate",
