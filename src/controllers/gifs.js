@@ -23,10 +23,10 @@ exports.createGif = (request, response) => {
 
       const values = [id, title, gifUrl, createdOn, userId];
       saveGif(values).then((data) => {
-        console.log(data);
         response.status(200).send({
           status: "success",
           data: {
+            id,
             title,
             userId,
             createdOn,
@@ -55,14 +55,13 @@ exports.createGif = (request, response) => {
 
 exports.getAllGifs = (request, response) => {
   findAllGifs().then((gifs) => {
-    console.log(gifs);
     response.status(200).send({
       status: "success",
       data: gifs,
     });
   }).catch((error) => {
     response.status(400).send({
-      status: "success",
+      status: "error",
       data: error.stack,
     });
   });
