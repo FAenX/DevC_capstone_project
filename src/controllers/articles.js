@@ -74,17 +74,23 @@ exports.editArticle = (request, response) => {
 
 exports.deleteArticle = (request, response) => {
   const { id } = request.params;
+  const { userId, isStaff } = request.body;
   const values = [id];
-  deleteArticle(values).then((articles) => {
-    response.status(200).send({
-      status: "success",
-      data: articles,
-    });
-  }).catch((error) => {
-    response.status(400).send({
-      status: "error",
-      data: error,
+  findOneArticle([id]).then((comm) => {
+    const { authorid } = comm;
+    if (userId === authorid || isStaff) {
+      deleteArticle(values).then((articles) => {
+        response.status(200).send({
+          status: "success",
+          data: articles,
+        });
+      }).catch((error) => {
+        response.status(400).send({
+          status: "error",
+          data: error,
 
-    });
+        });
+      });
+    }
   });
 };
